@@ -1,0 +1,101 @@
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('wallpaper.jpg');
+    background-size: cover;      /* Ensures the background image covers the entire viewport */
+    background-position: center;
+    height: 100vh;               /* Sets the height of the body to be 100% of the viewport height */
+    margin: 0;  
+}
+
+
+#header{
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: x-large;
+    height: 80px;
+    border-bottom: white 1px solid;
+    margin-left: 40px;
+    margin-right: 40px;
+
+}
+#navigationBar{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    justify-content: space-around;
+    padding: 40px;
+    column-gap: 60px;
+    
+
+}
+
+
+a{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: x-large;
+    color: white;
+    font-weight: bold;
+
+   /* display: flex;
+   /* align-items:end; /* Centers the content vertically */
+    /*justify-content: center; /* Centers the content horizontally */
+    /*height: 100%; /* Ensure the label takes the full height of its container */
+    cursor: pointer; 
+    text-decoration: none;
+    opacity: 80%;
+    
+}
+a:hover{
+    opacity: 100%;
+}
+
+
+
+#profileLink{
+    width: 40px;
+    height: 40px;
+    margin: 20px;
+    border-radius: 20px;
+    cursor: pointer; 
+
+
+}
+
+#profileImage{
+    width: 40px; 
+    height: 40px; 
+    border-radius: 20px;
+
+}
+#mesazhiContainer{
+    width: 650px;
+    padding-left: 80px;
+    padding-top: 150px;
+
+}
+
+#mesazhi{
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+
+    font-size: xxx-large;
+    font-weight: bold;
+
+    
+}
+#makinatTona{
+    display: flex;
+    justify-self: center;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    font-size: xx-large;
+
+    background: none;
+    cursor: pointer; 
+
+    border: solid 4px white;
+    margin-top: 30px;
+}

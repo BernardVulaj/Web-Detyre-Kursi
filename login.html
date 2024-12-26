@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+            Login Page
+        </title>
+        <link rel="stylesheet" href="css/login.css">
+
+    </head>
+    <body>
+        <form id="form" >
+            <h1 id="header">Login</h1>
+            <div class="startEnd">
+                <label id="nukKaAccountLabel">Nuk keni account akoma?</label>
+                <a id="regjistrohuLink" href="register.html">Regjistrohu</a>
+            </div>
+                
+            <label class="labels">Adresa email</label>
+            <input type="email" id="emailInput" placeholder="shembull@gmail.com">
+               
+            <div class="startEnd">
+                <label class="labels">Fjalekalimi</label>
+                <a id="harruaFjalekalimiLink">Harrua fjalekalimin?</a>
+            </div>
+            <input type="password" id="passwordInput" placeholder="Jepni 8 ose me shume karaktere">
+
+            <div id="meKujtoContainer">
+                <input type="checkbox"> 
+                <label>Me kujto</label>
+            </div>
+            <button id="loginButton">LOGIN</button>
+        </form>
+        
+        <script>
+            // Function to get cookies by name
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? match[2] : null;
+            }
+
+            // Check if "remember_token" cookie exists and is valid
+            const rememberToken = getCookie('remember_token');
+            if (rememberToken) {
+                fetch("rememberMe.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ rememberToken: rememberToken })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('emailInput').value = data.email;
+                        document.getElementById('passwordInput').value = data.password;
+                        document.getElementById('rememberMeCheckbox').checked = true;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            document.getElementById("form").addEventListener("submit", function(event) {
+                event.preventDefault();  // Prevent the form from submitting normally
+
+                // Get the user input values
+                const email = document.getElementById("emailInput").value;
+                const password = document.getElementById("passwordInput").value;
+                const rememberMe = document.getElementById("meKujtoContainer").querySelector("input").checked;
+
+                // const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                // if (!emailPattern.test(email)) {
+                //     alert("Please enter a valid email.");
+                //     return;
+                // }
+
+                // Create an object to hold the user data
+                const loginData = {
+                    email: email,
+                    password: password,
+                    rememberMe: rememberMe
+                };
+
+                // Send the data to the PHP backend using fetch()
+                fetch("login.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(loginData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Login successful!");
+                        // Optionally, redirect to another page
+                       window.location.href = "index.html";  // or any page you want to redirect to
+                    } else {
+                        alert(data.message);  // Display error message
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            });
+
+
+            // document.addEventListener('DOMContentLoaded', function(event) {
+            //     fetch('login.php')
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             if (data.success) {
+            //                 // If "remember me" token is valid, fill in the email field
+            //                 document.getElementById('emailInput').value = data.email;
+            //                 document.getElementById('passwordInput').value = data.password;
+
+
+            //                 // Optionally, if you want to also pre-check the "remember me" checkbox:
+            //                 document.getElementById('meKujtoContainer').querySelector("input").checked = true;
+            //             } else {
+            //                 console.log(data.message);  // Optional: log message if no valid token is found
+            //             }
+            //         })
+            //         .catch(error => {
+            //             console.error("Error:", error);
+            //         });
+
+            // });
+
+        </script>
+    </body>
+</html>
