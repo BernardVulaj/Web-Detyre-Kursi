@@ -11,37 +11,43 @@ if (empty($data['verificationCode'])) {
 }
 
 $enteredCode = $data['verificationCode'];
+$verifyInDatabase = $data['verify'];
 
 // Check if the verification code matches the one stored in the session
 if (isset($_SESSION['verification_code']) && $_SESSION['verification_code'] == $enteredCode) {
     // Mark the user as verified in the database
-    $email = $_SESSION['email'];
+    if($verifyInDatabase){
+        $email = $_SESSION['email'];
 
-    // Database connection
-    $host = 'localhost';
-    $dbname = 'car_rental';
-    $username = 'root';
-    $password = '';
-    
-    $conn = new mysqli($host, $username, $password, $dbname);
-    
-    if ($conn->connect_error) {
-        die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
+        // Database connection
+        $host = 'localhost';
+        $dbname = 'car_rental';
+        $username = 'root';
+        $password = '';
+        
+        $conn = new mysqli($host, $username, $password, $dbname);
+        
+        if ($conn->connect_error) {
+            die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
+        }
+        
+        // Update the user's verification status
+        $stmt = $conn->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+
+        $stmt->close();
+        $conn->close();
     }
     
-    // Update the user's verification status
-    $stmt = $conn->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
 
     // Clear session data
     // unset($_SESSION['verification_email']);
     // unset($_SESSION['verification_code']);
 
-    echo json_encode(["success" => true, "message" => "Email verified successfully!"]);
+    echo json_encode(["success" => true, "message" => "Success!"]);
 
-    $stmt->close();
-    $conn->close();
+    
 } else {
     echo json_encode(["success" => false, "message" => "Invalid verification code."]);
 }

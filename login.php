@@ -59,10 +59,10 @@ if ($result->num_rows > 0) {
             }
 
             // Successful login
-            echo json_encode(["success" => true, "message" => "Login successful."]);
+            echo json_encode(["success" => true, "verified" => true, "message" => "Login successful."]);
         } else {
             // Account is not verified
-            echo json_encode(["success" => false, "verified" => false, "message" => "Please verify your email address."]);
+            echo json_encode(["success" => true, "verified" => false, "message" => "Please verify your email address."]);
         }
     } else {
         // Incorrect password

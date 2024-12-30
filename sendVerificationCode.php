@@ -2,6 +2,7 @@
 require_once "functions.php"; // Make sure this file includes the sendEmail function
 
 session_start();
+header('Content-Type: application/json'); // Add this line at the top of your PHP file
 
 // Check if email is stored in the session
 if (!isset($_SESSION['email'])) {
@@ -27,7 +28,7 @@ if ($conn->connect_error) {
 }
 
 // Query the database to check if the email exists and is not yet verified
-$stmt = $conn->prepare("SELECT id, name FROM users WHERE email = ? AND is_verified = 0");
+$stmt = $conn->prepare("SELECT id, name FROM users WHERE email = ? ");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
