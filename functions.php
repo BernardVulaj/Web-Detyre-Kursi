@@ -20,7 +20,7 @@ function sendEmail($text, $emailDestination){
         $mail->SMTPAuth = true;                                   //Enable SMTP authentication
         $mail->Username = 'rentmakina@gmail.com';                     //SMTP username
         $mail->Password = 'zahn jkma ryxn eknv';                               //SMTP password
-        $mail->SMTPSecure = 'tsl';            //Enable implicit TLS encryption
+        $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
         $mail->Port = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
         //Recipients
         $mail->setFrom('rentmakina@gmail.com', 'Rent Makina');
@@ -39,11 +39,14 @@ function sendEmail($text, $emailDestination){
         if ($mail->send()) {
             return true; // Email sent successfully
         } else {
+            error_log("Email sending failed: " . $mail->ErrorInfo); // Log the error info
             return false; // Email sending failed
         }
     } catch (Exception $e) {
         // Catch PHPMailer's exception and return the error message
         error_log("Mailer Error: {$mail->ErrorInfo}"); // Log the error
+        // return "Mailer Error: {$mail->ErrorInfo}"; 
         return false;
     }
 }
+?>
