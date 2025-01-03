@@ -36,6 +36,7 @@ if (isset($_SESSION['verification_code']) && $_SESSION['verification_code'] == $
         
         if ($conn->connect_error) {
             die(json_encode(["success" => false, "message" => "Gabim ne lidhje me databazen: " . $conn->connect_error]));
+
         }
         
         // Update the user's verification status

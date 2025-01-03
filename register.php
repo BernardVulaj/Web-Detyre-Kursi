@@ -66,6 +66,7 @@ $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 // Insert user data into the database using MySQLi
 try {
     $stmt = $conn->prepare("INSERT INTO users (username, email, password, role_id, is_verified) VALUES (?, ?, ?, 2, 0)");
+
     $stmt->bind_param("sss", $username, $email, $hashedPassword); // "sss" for three string parameters
     $stmt->execute();
 

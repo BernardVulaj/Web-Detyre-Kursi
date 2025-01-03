@@ -7,12 +7,13 @@ $data = json_decode(file_get_contents("php://input"), true);
 // Check if email is provided in the request
 if (!isset($data['email'])) {
     echo json_encode(["success" => false, "message" => "Nuk keni dhene emailin"]);
+
     exit();
 }
 
 $email = $data['email'];
 
-// Validate the email format
+
 // if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 //     echo json_encode(["success" => false, "message" => "Invalid email format"]);
 //     exit();
@@ -24,6 +25,7 @@ $emailRegex = "/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/";
 
 if(!preg_match($emailRegex, $email)){
     echo json_encode(["success" => false, "message" => "Ju lutem jepni nje email valid."]);
+
     exit();
 }
 
@@ -44,18 +46,23 @@ if ($conn->connect_error) {
 
 // Query to check if the email exists in the database and retrieve block status
 $stmt = $conn->prepare("SELECT id, username, email, blocked_until FROM users WHERE email = ?");
+
+>>>>>>> d2384f6767bd0c3d0a03ae771918d9df94d2255c
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 // Check if the email is found in the database
 if ($result->num_rows === 0) {
+
     echo json_encode(["success" => false, "message" => "Nuk ka perdorues te rregjistruar me kete email."]);
+
     exit();
 }
 
 // Fetch user data
 $user = $result->fetch_assoc();
+
 
 // Check if the user is blocked
 if ($user['blocked_until'] && new DateTime() < new DateTime($user['blocked_until'])) {
@@ -65,10 +72,10 @@ if ($user['blocked_until'] && new DateTime() < new DateTime($user['blocked_until
 
 // Store the email and username in the session
 $_SESSION['email'] = $email;
-$_SESSION['username'] = $user['username'];  // Optionally store the username as well
 
 // Return success response
 echo json_encode(["success" => true, "message" => "Emaili u verifikua dhe eshte ruajtur ne session"]);
+
 
 // Close the database connection
 $stmt->close();

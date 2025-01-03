@@ -10,8 +10,10 @@
     <body>
         <form id="form">
             <h1>Verifiko emailin</h1>
+
             <label id="firstLabel">Nje kod verifikimi eshte derguar ne emailin tuaj.</label><br>
             <label>Ju lutem shkruani kodin e marre me poshte per te verifikuar adresen tuaj te emailit.</label>
+
             <input type="number" id="kodiVerifikimitInput" placeholder="kodi 6 shifror">
             <button id="verifyButton">VERIFIKO</button>
             <button id="ridergoKodin">RIDERGO KODIN</button>
@@ -21,7 +23,7 @@
         <script>
             window.addEventListener('load', function(event){
                 event.preventDefault();
-                
+
                 fetch('sendVerificationCode.php', {
                     method: 'POST',
                     headers:{
@@ -40,12 +42,15 @@
                         }
                     } catch (e) {
                         console.error('Error parsing JSON:', e);
+
                         alert("Ka ndodhur nje gabim gjate dergimit te kodit ne email.");
+
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     alert("Ka ndodhur nje gabim gjate dergimit te kodit ne email.");
+
                 });
             });
 

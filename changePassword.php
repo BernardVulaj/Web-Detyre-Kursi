@@ -57,6 +57,7 @@ $currentPassword = $user['password']; // Current password (hashed)
 // Check if the new password is the same as the old password
 if (password_verify($newPassword, $currentPassword)) {
     echo json_encode(['success' => false, 'message' => 'Fjalekalimi i ri nuk mund te jete i njejte si fjalekalimi aktual.']);
+
     exit;
 }
 
@@ -66,6 +67,7 @@ $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 // Prepare SQL query to update the user's password
 $stmt = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
 $stmt->bind_param('ss', $hashedPassword, $email);
+
 
 // Execute the update query
 if ($stmt->execute()) {
