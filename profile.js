@@ -5,6 +5,8 @@ $(document).ready(function() {
     $('#simulation').show();
 });
 
+
+
 function populateTable(tbodySelector, dataArray, fields) {
     const tbody = document.querySelector(tbodySelector);
     tbody.innerHTML = ""; // Clear previous rows
@@ -19,7 +21,6 @@ function populateTable(tbodySelector, dataArray, fields) {
         tbody.appendChild(row);
     });
      // Add the "Add User" button at the end of the table
-       // Add the "Add User" button at the end of the table
     tbody.insertAdjacentHTML('beforeend', `
         <tr>
             <td colspan="3">
@@ -63,7 +64,6 @@ function get_user_main() {
         }
     });
 }
-
 
 function toggleProfileSections({ user, list, admin, addUser }) {
     $('#profile_user').toggle(user);
@@ -257,6 +257,17 @@ function goDETAILS(userId) {
     });
     
 }
+function exit_admin() {
+    // Fsheh seksionin e profilit të administratorit
+    $('#profile_admin').hide();
+    
+    // Opsionalisht, mund të fshehësh edhe seksionet e tjera ose të bësh ndonjë veprim tjetër
+    $('#profile_user').hide();
+    $('#profile_list').show(); // Trego listën e klientëve
+
+    // Mund të shtosh ndonjë logjikë tjetër që dëshiron këtu
+    console.log("Exited admin profile view.");
+}
 
 function populateDetails(tbodySelector, user) {
     const tbody = document.querySelector(tbodySelector);
@@ -316,7 +327,6 @@ function populateDetails(tbodySelector, user) {
     rowEmail.appendChild(thEmail);
     rowEmail.appendChild(tdEmailValue);
     tbody.appendChild(rowEmail);
-
     // =========
     // PASSWORD
     // =========
@@ -346,18 +356,18 @@ function populateDetails(tbodySelector, user) {
     let tdProfileValue = document.createElement('td');
 
  	// 1) Display the existing image
-	let imgElement = document.createElement('img');
-	let imagePath = "images/" + user.profile_image;
-	imgElement.src = imagePath;
-	imgElement.alt = "User Profile Image";
-	imgElement.style.maxWidth = '100px';
-
-	console.log("Image path:", imagePath);
-
-	// Add error handler for image loading
-	imgElement.onerror = () => {
-	    console.error("Image not found:", imagePath);
-	};
+     let imgElement = document.createElement('img');
+     let imagePath = user.profile_image; // Path-i i plotë tashmë përfshin direktorinë 'images/'
+     imgElement.src = imagePath;
+     imgElement.alt = "User Profile Image";
+     imgElement.style.maxWidth = '100px';
+     
+     console.log("Image path:", imagePath);
+     
+     // Add error handler for image loading
+     imgElement.onerror = () => {
+         console.error("Image not found:", imagePath);
+     };
 
 	// 2) Create a file input (for uploading a new image)
 	let fileInput = document.createElement('input');
@@ -451,7 +461,7 @@ function populateDetails(tbodySelector, user) {
 	tbody.insertAdjacentHTML( 'beforeend', `
 	    <tr>
 	        <td colspan="2">
-	            <button onclick="updateDETAILS(${user.id})">Exit </button>
+	            <button id="deleteUserButton"  onclick="exit_admin()">Exit </button>
 	        </td>
 	         <td colspan="2">
 	            <button onclick="updateDETAILS(${user.id})">Update Profile</button>
@@ -461,7 +471,9 @@ function populateDetails(tbodySelector, user) {
 	            <button onclick="deleteUser(${user.id})">Delete User</button>
 	        </td>
 	    </tr>
+        
 	`);
+   
 }
 
 
@@ -507,6 +519,7 @@ function updateDETAILS(userId) {
         success: response => {
             console.log(response);
             alert('Profile updated successfully!');
+            get_list();
         },
         error: err => {
             console.error("Error updating profile:", err);
