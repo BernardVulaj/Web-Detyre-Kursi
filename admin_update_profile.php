@@ -1,5 +1,5 @@
 <?php
-$conn = new mysqli('localhost', 'root', '', 'car_rental');
+$conn = new mysqli('localhost', 'root', '', 'car_rental'); // Kontrollo emrin e bazës së të dhënave
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -8,7 +8,6 @@ if ($conn->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = htmlspecialchars($_POST['name']);
     $email = htmlspecialchars($_POST['email']);
-    $password = htmlspecialchars($_POST['password']);
     $role_id = htmlspecialchars($_POST['role_id']);
     $is_verified = htmlspecialchars($_POST['is_verified']);
     $userId = intval($_POST['id']); // Fetch dynamic user ID
@@ -32,11 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_size = $_FILES["profile_picture"]["size"];
 
         if (in_array($file_type, $allowed_types) && $file_size <= 2 * 1024 * 1024) { // Max size: 2MB
-            $target_dir = "uploads/";
-            if (!is_dir($target_dir)) {
-                mkdir($target_dir, 0755, true);
-            }
-            $target_file = $target_dir . basename($profile_image);
+            $target_dir = "images/";
+            $target_file = $target_dir . $userId . '.' . pathinfo($profile_image, PATHINFO_EXTENSION); // Përdor userId për emrin e skedarit
             if (!move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $target_file)) {
                 echo "Error uploading the profile picture.";
                 exit;
@@ -55,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params[] = $password_hashed;
     }
     if ($target_file) {
-        $sql .= ", profile_image = ?";
+        $sql .= ", profile_image = ?"; // Sigurohu që emri i kolonës është i saktë
         $params[] = $target_file;
     }
     $sql .= " WHERE id = ?";
