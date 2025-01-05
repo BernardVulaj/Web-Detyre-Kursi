@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="profile.css">
+    <script src="profile.js"></script>
+</head>
+<body>
+    <div id="simulation">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label for="simulate" aria-label="UserID for simulation">UserID for Simulation</label>
+                    </td>
+                    <td>
+                        <input type="text" id="simulate" name="simulate" value="1" style="width: 50px; text-align: center;" />
+                    </td>
+                    <td>
+                        <img 
+                            src="images/ask_button.jpeg" 
+                            alt="Get User Details" 
+                            style="width: 40px; height: 30px; cursor: pointer;" 
+                            onclick="get_user_main();" 
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="profile_list">
+        <h1 style="text-align: center;">Client List</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="body-profile-list">
+                <!-- Client data will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="profile_admin">
+        <h1 style="text-align: center;">Client Details</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody id="body-profile-details">
+                <!-- Client details will be dynamically inserted here -->
+            </tbody>
+
+        </table>
+    </div>
+
+    <div id="profile_user">
+        <h1 style="text-align: center;">Your Profile Details</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody id="body-profile-details-user">
+                <!-- User profile details will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+    </div>
+</body>
+</html>
