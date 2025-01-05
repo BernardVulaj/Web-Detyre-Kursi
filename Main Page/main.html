@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="./main.css" rel="stylesheet">
+  </head>
+  <body>
+   
+    <nav>
+      <a href="../Home Page/home.html">Home</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <main>
+      <div class="container">
+        <div class="relative">
+          <div class='img-container'><img src='./benz.png' alt='BMW'/>
+          </div>
+          <p class="year">2015/$31</p>
+        </div>
+        <div class="description">
+          <p class="car-name">Mercedes Benz</p>
+          <div class="car-details-container">
+            <!-- <div class="car-details"> -->
+              <i class="bi bi-lightning-charge-fill">
+                <span class="text">1.9</span>
+              </i>
+              <i class="bi bi-fuel-pump-fill">
+                <span class="text">Nafte</span>
+              </i>
+              <i class="bi bi-hdd-network-fill">
+                <span class="text">Automatik</span>
+              </i>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="pagination">
+        <!-- Previous Button -->
+        <button class="disabled">Previous</button>
+        
+        <!-- Page Numbers -->
+        <a href="#page1" class="active">1</a>
+        <a href="#page2">2</a>
+        <a href="#page3">3</a>
+        <a href="#page4">4</a>
+        
+        <!-- Next Button -->
+        <button>Next</button>
+      </div>
+    </footer>
+  
+  </body>
+
+  <script>
+    for(let i=0; i<6; i++){
+    let x=Math.floor(Math.random()*10)
+    document.querySelector('main').innerHTML+=`
+      <div class="container">
+        <div class="relative">
+          <div class='img-container'><img src='./${x%2==0?'benz':'bmw'}.png' alt='BMW'/>
+          </div>
+          <p class="year">201${x}/$${i}${x}</p>
+        </div>
+        <div class="description">
+          <p class="car-name">${x%2==0?'Mercedes Benz':'Audi'}</p>
+          <div class="car-details-container">
+            <!-- <div class="car-details"> -->
+              <i class="bi bi-lightning-charge-fill">
+                <span class="text">2.${Math.round(Math.random() * 8) + 1}</span>
+              </i>
+              <i class="bi bi-fuel-pump-fill">
+                <span class="text">${x%2==0?'Nafte':'Benzine'}</span>
+              </i>
+              <i class="bi bi-hdd-network-fill">
+                <span class="text">${x%2==0?'Automatik':'Manual'}</span>
+              </i>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    `
+  }
+
+  </script>
+</html>
