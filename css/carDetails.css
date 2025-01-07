@@ -1,0 +1,112 @@
+body, html{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ededed;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+#container{
+    border-radius: 15px;
+    background-color: white;
+    /* width: 1200px; */
+    padding: 40px;
+    padding-left: 0px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    
+}
+#imageContainer{
+    display: flex;
+    align-items: center;
+}
+
+#carImage{
+    width: 650px; 
+    height: 500px; 
+    border-radius: 10px;
+
+}
+#leftArrow,#rightArrow{
+    border: none;
+    background-color: transparent;
+    font-size: xxx-large;
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+    color:navy;
+    opacity: 70%;
+    border-radius: 25px;
+   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+#leftArrow:hover,#rightArrow:hover{
+    opacity: 100%;
+}
+#leftArrow:active,#rightArrow:active{
+    color: white;
+    opacity: 100%;
+}
+#detailsContainer{
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-left: 10px;
+}
+h1{
+    margin: 0px;
+}
+.staticLabel{
+    font-weight: bold;
+}
+.detailLabel{
+    font-style:italic;
+    color:dimgray;
+    
+}
+
+
+
+
+
+#rezervoButton{
+    padding: 12px;
+    font-size: small;
+    color: white;
+    background-color:navy;
+    opacity: 70%;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    
+}
+#rezervoButton:hover{
+    opacity: 85%;
+}
+#rezervoButton:active{
+    opacity: 100%;
+}
+
+#dilButton{
+    padding: 12px;
+    font-size: small;
+    color:navy;
+    background-color: white;
+    opacity: 70%;
+    cursor: pointer;
+    border: solid 2px navy;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+#dilButton:hover{
+    opacity: 85%;
+}
+#dilButton:active{
+    opacity: 100%;
+}

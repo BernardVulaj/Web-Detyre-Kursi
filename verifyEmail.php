@@ -6,44 +6,58 @@ session_start(); // Start session to access stored email and verification code
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (empty($data['verificationCode'])) {
-    echo json_encode(["success" => false, "message" => "Verification code is required."]);
+    echo json_encode(["success" => false, "message" => "Kodi i verifikimit eshte i nevojitur."]);
     exit();
 }
 
 $enteredCode = $data['verificationCode'];
+$verifyInDatabase = $data['verify'];
+
+$codeRegex = "/^\d{6}$/";
+if(!preg_match($codeRegex, $enteredCode)){
+    echo json_encode(["success" => false, "message" => "Kodi duhet te kete 6 shifra"]);
+    exit();
+}
+
 
 // Check if the verification code matches the one stored in the session
 if (isset($_SESSION['verification_code']) && $_SESSION['verification_code'] == $enteredCode) {
     // Mark the user as verified in the database
-    $email = $_SESSION['email'];
+    if($verifyInDatabase){
+        $email = $_SESSION['email'];
 
-    // Database connection
-    $host = 'localhost';
-    $dbname = 'car_rental';
-    $username = 'root';
-    $password = '';
-    
-    $conn = new mysqli($host, $username, $password, $dbname);
-    
-    if ($conn->connect_error) {
-        die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
+        // Database connection
+        $host = 'localhost';
+        $dbname = 'car_rental';
+        $username = 'root';
+        $password = '';
+        
+        $conn = new mysqli($host, $username, $password, $dbname);
+        
+        if ($conn->connect_error) {
+            die(json_encode(["success" => false, "message" => "Gabim ne lidhje me databazen: " . $conn->connect_error]));
+
+        }
+        
+        // Update the user's verification status
+        $stmt = $conn->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+
+        $stmt->close();
+        $conn->close();
     }
     
-    // Update the user's verification status
-    $stmt = $conn->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
 
     // Clear session data
     // unset($_SESSION['verification_email']);
     // unset($_SESSION['verification_code']);
 
-    echo json_encode(["success" => true, "message" => "Email verified successfully!"]);
+    echo json_encode(["success" => true, "message" => "Sukses!"]);
 
-    $stmt->close();
-    $conn->close();
+    
 } else {
-    echo json_encode(["success" => false, "message" => "Invalid verification code."]);
+    echo json_encode(["success" => false, "message" => "Kodi i verifikimit i pasakte."]);
 }
 
 

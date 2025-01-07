@@ -24,7 +24,7 @@
                     </a>
     
                 </div>
-                <a id="profileLink" href="register.html" onclick="profileClicked()">
+                <a id="profileLink" href="login.html">
                     <img id="profileImage" src="Images/profileImage.jpg">
                 </a>
             </div>
@@ -39,7 +39,14 @@
                 Makinat Tona
             </a>
         <script>
-            
+            document.getElementById("makinatTona").addEventListener("click", function(){
+                // vetem per testim kto posht do t ndryshohen
+                document.cookie = "car_id=1; path=/";
+                window.location.href = "carDetails.html"; 
+
+            });
         </script>
+        <script src="sessionTimeout.js"></script>
+
     </body>
 </html>
