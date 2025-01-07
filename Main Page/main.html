@@ -17,29 +17,6 @@
     </nav>
 
     <main>
-      <div class="container">
-        <div class="relative">
-          <div class='img-container'><img src='./benz.png' alt='BMW'/>
-          </div>
-          <p class="year">2015/$31</p>
-        </div>
-        <div class="description">
-          <p class="car-name">Mercedes Benz</p>
-          <div class="car-details-container">
-            <!-- <div class="car-details"> -->
-              <i class="bi bi-lightning-charge-fill">
-                <span class="text">1.9</span>
-              </i>
-              <i class="bi bi-fuel-pump-fill">
-                <span class="text">Nafte</span>
-              </i>
-              <i class="bi bi-hdd-network-fill">
-                <span class="text">Automatik</span>
-              </i>
-            <!-- </div> -->
-          </div>
-        </div>
-      </div>
     </main>
 
     <footer>
@@ -60,35 +37,5 @@
   
   </body>
 
-  <script>
-    for(let i=0; i<6; i++){
-    let x=Math.floor(Math.random()*10)
-    document.querySelector('main').innerHTML+=`
-      <div class="container">
-        <div class="relative">
-          <div class='img-container'><img src='./${x%2==0?'benz':'bmw'}.png' alt='BMW'/>
-          </div>
-          <p class="year">201${x}/$${i}${x}</p>
-        </div>
-        <div class="description">
-          <p class="car-name">${x%2==0?'Mercedes Benz':'Audi'}</p>
-          <div class="car-details-container">
-            <!-- <div class="car-details"> -->
-              <i class="bi bi-lightning-charge-fill">
-                <span class="text">2.${Math.round(Math.random() * 8) + 1}</span>
-              </i>
-              <i class="bi bi-fuel-pump-fill">
-                <span class="text">${x%2==0?'Nafte':'Benzine'}</span>
-              </i>
-              <i class="bi bi-hdd-network-fill">
-                <span class="text">${x%2==0?'Automatik':'Manual'}</span>
-              </i>
-            <!-- </div> -->
-          </div>
-        </div>
-      </div>
-    `
-  }
-
-  </script>
+  <script src="./main.js"></script>
 </html>
