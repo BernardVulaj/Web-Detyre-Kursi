@@ -75,11 +75,11 @@ function get_user_main() {
             alert("An error occurred while fetching user data.");
         }
     });
-    $('#simulation').css({
-    	position: 'absolute',
-    	top: '0',
-    	right: '0'
-    });
+    // $('#simulation').css({
+    // 	position: 'absolute',
+    // 	top: '0',
+    // 	right: '0'
+    // });
 }
 
 
@@ -291,7 +291,7 @@ function populateDetails(tbodySelector, user) {
     let thId = document.createElement('td');
     thId.textContent = 'ID';
     
-    // if(user.role_id == 1){
+     if(role_id == 1){
         let tdIdValue = document.createElement('td');
         let inputId = document.createElement('input');
         inputId.type = 'text';
@@ -304,7 +304,7 @@ function populateDetails(tbodySelector, user) {
         rowId.appendChild(tdIdValue);
         tbody.appendChild(rowId);
 
-    // }
+     }
     
 
     // =========
@@ -354,7 +354,7 @@ function populateDetails(tbodySelector, user) {
     
     let tdPasswordValue = document.createElement('td');
     let inputPassword = document.createElement('input');
-    inputPassword.type = user.pasword;
+    inputPassword.type = 'password';
     inputPassword.id = 'user_password_' + user.id; // or some unique ID
     
     tdPasswordValue.appendChild(inputPassword);
@@ -419,7 +419,7 @@ function populateDetails(tbodySelector, user) {
 	// Example for Role, Verified, etc.
 	// ===================================
 	// role_id
-    // if(user.role_id == 1){
+     if(role_id == 1){
         let rowRole = document.createElement('tr');
         let thRole = document.createElement('td');
         thRole.textContent = 'Role ID';
@@ -433,7 +433,7 @@ function populateDetails(tbodySelector, user) {
         rowRole.appendChild(tdRoleValue);
         tbody.appendChild(rowRole);
 
-    // }
+    
 	
 
 	// is_verified
@@ -484,24 +484,74 @@ function populateDetails(tbodySelector, user) {
 	rowUpdated.appendChild(thUpdated);
 	rowUpdated.appendChild(tdUpdatedValue);
 	tbody.appendChild(rowUpdated);
+     }
+     console.log(role_id);
+     if(role_id==1){
 
-	tbody.insertAdjacentHTML( 'beforeend', `
-	    <tr>
-	        <td colspan="2">
-	            <button id="deleteUserButton"  onclick="exit_admin()">Exit </button>
-	        </td>
-	         <td colspan="2">
-	            <button onclick="updateDETAILS(${user.id})">Update Profile</button>
-	        </td>
-	         
-	         <td colspan="2">
-	            <button onclick="deleteUser(${user.id})">Delete User</button>
-	        </td>
-	    </tr>
-        
-	`);
+     tbody.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td colspan="2">
+            <img id="picture3" src="images/exit.png" 
+                 style="height:50px; width:50px; float:left;" 
+                 onclick="exit_admin();">
+                 </td>
+                 <td colspan="2">
+                            <button onclick="signOut()">Sign Out</button>  
+                 </td>
+                 <td colspan="2">
+            <img id="picture5" src="images/edit-user.png" 
+                 style="height:50px; width:50px; float:right;" 
+                 onclick="updateDETAILS(${user.id});">
+                 </td>
+                 <td colspan="2">
+                  <img id="picture4" src="images/delete.png" 
+                 style="height:50px; width:50px; float:right;" 
+                 onclick="deleteUser(${user.id});">
+                 </td>
+
+        </tr>
+      `);
+    }else{
+        tbody.insertAdjacentHTML('beforeend', `
+            <tr>
+              <td colspan="2">
+                     <button onclick="signOut()">Sign Out</button>  
+                     </td>
+                     <td colspan="2">
+                      <img id="picture4" src="images/delete.png" 
+                     style="height:50px; width:50px; float:right;" 
+                     onclick="deleteUser(${user.id});">
+                <button onclick="updateUser(${user.id})">Update User</button>
+                     </td>
+    
+            </tr>
+          `);
+
+    }
+
    
 }
+// 2) Define the signOut function
+function signOut() {
+    // Make an AJAX request to logout.php
+    $.ajax({
+        url: 'logout.php',         // or '/api/logout'
+        method: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            console.log('Logout response:', response);
+            // If successful, redirect the user to the login page
+            window.location.href = 'login.html'; 
+            // or wherever your user should land after logging out
+        },
+        error: function(err) {
+            console.error('Logout error:', err);
+            alert("An error occurred while logging out.");
+        }
+    });
+}
+
+
 
 
 function updateDETAILS(userId) {
@@ -554,6 +604,53 @@ function updateDETAILS(userId) {
         }
     });
 }
+
+
+function updateUser(userId) {
+    console.log('userId:', userId);
+    const usernameElement = document.querySelector('#user_name_' + userId);
+    const emailElement = document.querySelector('#user_email_' + userId);
+    const passwordElement = document.querySelector('#user_password_' + userId);
+    const fileInput = document.querySelector('#user_profile_image_' + userId);
+
+    if (!usernameElement || !emailElement || !passwordElement || !fileInput) {
+        console.error("One or more elements are missing.");
+        alert("An error occurred: One or more elements are missing.");
+        return;
+    }
+
+    const updatedName = usernameElement.value;
+    const updatedEmail = emailElement.value;
+    const updatedPassword = passwordElement.value;
+   
+    const formData = new FormData();
+    formData.append('id', userId);
+    formData.append('username', updatedName);
+    formData.append('email', updatedEmail);
+    formData.append('password', updatedPassword);
+    
+    if (fileInput.files.length > 0) {
+        formData.append('profile_picture', fileInput.files[0]);
+    }
+
+    $.ajax({
+        url: 'user_update_profile.php',
+        method: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: response => {
+            console.log(response);
+            alert('User profile updated successfully!');
+            get_list();
+        },
+        error: err => {
+            console.error("Error updating profile:", err);
+            alert("An error occurred while updating the profile.");
+        }
+    });
+}
+
 function addUser() {
     const usernameElement = document.querySelector('#user_name_new');
     const emailElement = document.querySelector('#user_email_new');
