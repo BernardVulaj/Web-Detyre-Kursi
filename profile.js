@@ -1,11 +1,20 @@
 $(document).ready(function() {
     // Hide all profile sections initially
     toggleProfileSections({ user: false, list: false, admin: false });
+    get_user_main();
     // Show only simulation
-    $('#simulation').show();
+    // $('#simulation').show();
 });
 
+// window.addEventListener('load', get_user_main);
 
+function toggleProfileSections({ user, list, admin, addUser }) {
+    $('#profile_user').toggle(user);
+    $('#profile_list').toggle(list);
+    $('#profile_admin').toggle(admin);
+    $('#add_user_form').toggle(addUser);
+    // $('#simulation').toggle(false); // Hide simulation by default
+}
 
 function populateTable(tbodySelector, dataArray, fields) {
     const tbody = document.querySelector(tbodySelector);
@@ -31,30 +40,33 @@ function populateTable(tbodySelector, dataArray, fields) {
 }
 
 function get_user_main() {
-    const userId = $('[name="simulate"]').val();
-    if (!userId) {
-        return;
-    }
+    // const userId = $('[name="simulate"]').val();
+    // if (!userId) {
+    //     return;
+    // }
     $.ajax({
         url: 'get_user.php',
         method: 'GET',
-        data: { id: userId }, 
+        // data: { id: 1 }, 
         dataType: 'json',
         success: (data) => {
             if (!data || data.length === 0) {
                 alert("User not found.");
                 return;
             }
-            const user = data[0];
-            const { id, role_id } = user;
+            // const user = data[0];
+            // const { id, role_id } = user;
+
+            role_id = data['role_id'];
+            user_id = data['id'];
 
             if (role_id === 1) {
                 alert('Get user list ad admnin' );
                 get_list();
-                toggleProfileSections({ user: false, list: true, admin: true });
+                toggleProfileSections({ user: false, list: true, admin: false });
             } else {
-                alert('Get datas for regular user: '+userId);
-                get_user(id);
+                // alert('Get datas for regular user: '+userId);
+                get_user(user_id);
                 toggleProfileSections({ user: true, list: false, admin: false });
             }
         },
@@ -63,135 +75,14 @@ function get_user_main() {
             alert("An error occurred while fetching user data.");
         }
     });
-}
-
-function toggleProfileSections({ user, list, admin, addUser }) {
-    $('#profile_user').toggle(user);
-    $('#profile_list').toggle(list);
-    $('#profile_admin').toggle(admin);
-    $('#add_user_form').toggle(addUser);
-    $('#simulation').toggle(false); // Hide simulation by default
-}
-function showAddUserForm() {
-    // Hide all sections and show the add user form
-    toggleProfileSections({ user: false, list: false, admin: false, addUser: true });
-
-    // Add the form for adding a new user
-    const formContainer = document.createElement('div');
-    formContainer.id = 'add_user_form';
-    formContainer.innerHTML = `
-        <h2>Add New User</h2>
-        <table>
-            <tr>
-                <td><input type="text" id="user_name_new" placeholder="Name"></td>
-                <td><input type="text" id="user_email_new" placeholder="Email"></td>
-                <td><input type="password" id="user_password_new" placeholder="Password"></td>
-                <td><input type="number" id="user_role_new" placeholder="Role ID"></td>
-                <td><input type="checkbox" id="user_verified_new"> Verified</td>
-                <td><input type="file" id="user_profile_image_new" accept="image/*"></td>
-                </tr>
-                <tr>
-                <td>
-                    <button onclick="submitNewUser()">Submit</button>
-                    <button onclick="cancelAddUser()">Cancel</button>
-                </td>
-            </tr>
-        </table>
-    `;
-    document.body.appendChild(formContainer);
-}
-function cancelAddUser() {
-    // Show the client list table
-    toggleProfileSections({ user: false, list: true, admin: false, addUser: false });
-
-    // Remove the add user form
-    document.querySelector('#add_user_form').remove();
-}
-function submitNewUser() {
-    const nameElement = document.querySelector('#user_name_new');
-    const emailElement = document.querySelector('#user_email_new');
-    const passwordElement = document.querySelector('#user_password_new');
-    const roleElement = document.querySelector('#user_role_new');
-    const verifiedElement = document.querySelector('#user_verified_new');
-    const fileInput = document.querySelector('#user_profile_image_new');
-
-    // Check if all required fields are filled
-    if (!nameElement.value.trim() || !emailElement.value.trim() || !passwordElement.value.trim() || !roleElement.value.trim()) {
-        alert("Please fill in all required fields.");
-        return;
-    }
-
-    // Validate email format
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(emailElement.value.trim())) {
-        alert("Please enter a valid email address.");
-        return;
-    }
-
-    // Check if profile image is provided
-    if (fileInput.files.length === 0) {
-        alert("Please upload a profile image.");
-        return;
-    }
-
-    const newEmail = emailElement.value.trim();
-
-    // Check if email is unique
-    $.ajax({
-        url: 'check_email.php',
-        method: 'POST',
-        data: { email: newEmail },
-        dataType: 'json',
-        success: response => {
-            if (response.exists) {
-                alert("This email is already in use. Please use a different email.");
-            } else {
-                // Proceed with form submission
-                const newName = nameElement.value;
-                const newPassword = passwordElement.value;
-                const newRole = roleElement.value;
-                const newIsVerified = verifiedElement.checked ? 1 : 0;
-
-                const formData = new FormData();
-                formData.append('name', newName);
-                formData.append('email', newEmail);
-                formData.append('password', newPassword);
-                formData.append('role_id', newRole);
-                formData.append('is_verified', newIsVerified);
-
-                if (fileInput.files.length > 0) {
-                    formData.append('profile_picture', fileInput.files[0]);
-                }
-
-                $.ajax({
-                    url: 'admin_addUser.php',
-                    method: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: response => {
-                        console.log(response);
-                        alert('User added successfully!');
-                        // Show the client list table again
-                        toggleProfileSections({ user: false, list: true, admin: false, addUser: false });
-                        // Remove the add user form
-                        document.querySelector('#add_user_form').remove();
-                        // Refresh the client list
-                        get_list();
-                    },
-                    error: err => {
-                        console.error("Error adding user:", err);
-                        alert("An error occurred while adding the user.");
-                    }
-                });
-            }
-        },
-        error: err => {
-            console.error("Error checking email:", err);
-            alert("An error occurred while checking the email.");
-        }
+    $('#simulation').css({
+    	position: 'absolute',
+    	top: '0',
+    	right: '0'
     });
 }
+
+
 function get_list() {
     $.ajax({
         url: 'admin_get_client_list.php',
@@ -213,7 +104,7 @@ function get_list() {
             }
             
             // No need to JSON.parse(data), it’s already an array
-            populateTable('#body-profile-list', data, ['id', 'name', 'email']);
+            populateTable('#body-profile-list', data, ['id', 'username', 'email']);
         },
         error: err => {
             console.error("Error fetching client list:", err);
@@ -257,6 +148,128 @@ function goDETAILS(userId) {
     });
     
 }
+
+function showAddUserForm() {
+    // Hide all sections and show the add user form
+    toggleProfileSections({ user: false, list: false, admin: false, addUser: true });
+
+    // Add the form for adding a new user
+    const formContainer = document.createElement('div');
+    formContainer.id = 'add_user_form';
+    formContainer.innerHTML = `
+        <h2>Add New User</h2>
+        <table>
+            <tr>
+                <td><input type="text" id="user_name_new" placeholder="Username"></td>
+                <td><input type="text" id="user_email_new" placeholder="Email"></td>
+                <td><input type="password" id="user_password_new" placeholder="Password"></td>
+                <td><input type="number" id="user_role_new" placeholder="Role ID"></td>
+                <td><input type="checkbox" id="user_verified_new"> Verified</td>
+                <td><input type="file" id="user_profile_image_new" accept="image/*"></td>
+                </tr>
+                <tr>
+                <td>
+                    <button onclick="submitNewUser()">Submit</button>
+                    <button onclick="cancelAddUser()">Cancel</button>
+                </td>
+            </tr>
+        </table>
+    `;
+    document.body.appendChild(formContainer);
+}
+function cancelAddUser() {
+    // Show the client list table
+    toggleProfileSections({ user: false, list: true, admin: false, addUser: false });
+
+    // Remove the add user form
+    document.querySelector('#add_user_form').remove();
+}
+function submitNewUser() {
+    const usernameElement = document.querySelector('#user_name_new');
+    const emailElement = document.querySelector('#user_email_new');
+    const passwordElement = document.querySelector('#user_password_new');
+    const roleElement = document.querySelector('#user_role_new');
+    const verifiedElement = document.querySelector('#user_verified_new');
+    const fileInput = document.querySelector('#user_profile_image_new');
+
+    // Check if all required fields are filled
+    if (!usernameElement.value.trim() || !emailElement.value.trim() || !passwordElement.value.trim() || !roleElement.value.trim()) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    // Validate email format
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(emailElement.value.trim())) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    // Check if profile image is provided
+    if (fileInput.files.length === 0) {
+        alert("Please upload a profile image.");
+        return;
+    }
+
+    const newEmail = emailElement.value.trim();
+
+    // Check if email is unique
+    $.ajax({
+        url: 'check_email.php',
+        method: 'POST',
+        data: { email: newEmail },
+        dataType: 'json',
+        success: response => {
+            if (response.exists) {
+                alert("This email is already in use. Please use a different email.");
+            } else {
+                // Proceed with form submission
+                const newName = usernameElement.value;
+                const newPassword = passwordElement.value;
+                const newRole = roleElement.value;
+                const newIsVerified = verifiedElement.checked ? 1 : 0;
+
+                const formData = new FormData();
+                formData.append('username', newName);
+                formData.append('email', newEmail);
+                formData.append('password', newPassword);
+                formData.append('role_id', newRole);
+                formData.append('is_verified', newIsVerified);
+
+                if (fileInput.files.length > 0) {
+                    formData.append('profile_picture', fileInput.files[0]);
+                }
+
+                $.ajax({
+                    url: 'admin_addUser.php',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: response => {
+                        console.log(response);
+                        alert('User added successfully!');
+                        // Show the client list table again
+                        toggleProfileSections({ user: false, list: true, admin: false, addUser: false });
+                        // Remove the add user form
+                        document.querySelector('#add_user_form').remove();
+                        // Refresh the client list
+                        get_list();
+                    },
+                    error: err => {
+                        console.error("Error adding user:", err);
+                        alert("An error occurred while adding the user.");
+                    }
+                });
+            }
+        },
+        error: err => {
+            console.error("Error checking email:", err);
+            alert("An error occurred while checking the email.");
+        }
+    });
+}
+
 function exit_admin() {
     // Fsheh seksionin e profilit të administratorit
     $('#profile_admin').hide();
@@ -278,17 +291,21 @@ function populateDetails(tbodySelector, user) {
     let thId = document.createElement('td');
     thId.textContent = 'ID';
     
-    let tdIdValue = document.createElement('td');
-    let inputId = document.createElement('input');
-    inputId.type = 'text';
-    inputId.value = user.id;
-    inputId.readOnly = true; 
-    // or inputId.disabled = true; if you prefer
+    // if(user.role_id == 1){
+        let tdIdValue = document.createElement('td');
+        let inputId = document.createElement('input');
+        inputId.type = 'text';
+        inputId.value = user.id;
+        inputId.readOnly = true; 
+        // or inputId.disabled = true; if you prefer
+        
+        tdIdValue.appendChild(inputId);
+        rowId.appendChild(thId);
+        rowId.appendChild(tdIdValue);
+        tbody.appendChild(rowId);
+
+    // }
     
-    tdIdValue.appendChild(inputId);
-    rowId.appendChild(thId);
-    rowId.appendChild(tdIdValue);
-    tbody.appendChild(rowId);
 
     // =========
     // NAME
@@ -296,12 +313,12 @@ function populateDetails(tbodySelector, user) {
     let rowName = document.createElement('tr');
     
     let thName = document.createElement('td');
-    thName.textContent = 'Name';
+    thName.textContent = 'Username';
     
     let tdNameValue = document.createElement('td');
     let inputName = document.createElement('input');
     inputName.type = 'text';
-    inputName.value = user.name;
+    inputName.value = user.username;
     inputName.id = 'user_name_' + user.id; // or some unique ID
     
     tdNameValue.appendChild(inputName);
@@ -402,18 +419,22 @@ function populateDetails(tbodySelector, user) {
 	// Example for Role, Verified, etc.
 	// ===================================
 	// role_id
-	let rowRole = document.createElement('tr');
-	let thRole = document.createElement('td');
-	thRole.textContent = 'Role ID';
-	let tdRoleValue = document.createElement('td');
-	let inputRole = document.createElement('input');
-	inputRole.type = 'number';
-	inputRole.value = user.role_id;
-	inputRole.id = 'user_role_' + user.id;
-	tdRoleValue.appendChild(inputRole);
-	rowRole.appendChild(thRole);
-	rowRole.appendChild(tdRoleValue);
-	tbody.appendChild(rowRole);
+    // if(user.role_id == 1){
+        let rowRole = document.createElement('tr');
+        let thRole = document.createElement('td');
+        thRole.textContent = 'Role ID';
+        let tdRoleValue = document.createElement('td');
+        let inputRole = document.createElement('input');
+        inputRole.type = 'number';
+        inputRole.value = user.role_id;
+        inputRole.id = 'user_role_' + user.id;
+        tdRoleValue.appendChild(inputRole);
+        rowRole.appendChild(thRole);
+        rowRole.appendChild(tdRoleValue);
+        tbody.appendChild(rowRole);
+
+    // }
+	
 
 	// is_verified
 	let rowVerified = document.createElement('tr');
@@ -425,6 +446,12 @@ function populateDetails(tbodySelector, user) {
 	// If user.is_verified is 1 (true) set checked
 	inputVerified.checked= !!user.is_verified;
 	inputVerified.id= 'user_verified_' + user.id;
+    // if(user.role_id == 2){
+
+        inputVerified.disabled = true;
+
+    // }
+
 	tdVerifiedValue.appendChild(inputVerified);
 	rowVerified.appendChild(thVerified);
 	rowVerified.appendChild(tdVerifiedValue);
@@ -479,20 +506,20 @@ function populateDetails(tbodySelector, user) {
 
 function updateDETAILS(userId) {
     console.log('userId:', userId);
-    const nameElement = document.querySelector('#user_name_' + userId);
+    const usernameElement = document.querySelector('#user_name_' + userId);
     const emailElement = document.querySelector('#user_email_' + userId);
     const passwordElement = document.querySelector('#user_password_' + userId);
     const roleElement = document.querySelector('#user_role_' + userId);
     const verifiedElement = document.querySelector('#user_verified_' + userId);
     const fileInput = document.querySelector('#user_profile_image_' + userId);
 
-    if (!nameElement || !emailElement || !passwordElement || !roleElement || !verifiedElement || !fileInput) {
+    if (!usernameElement || !emailElement || !passwordElement || !roleElement || !verifiedElement || !fileInput) {
         console.error("One or more elements are missing.");
         alert("An error occurred: One or more elements are missing.");
         return;
     }
 
-    const updatedName = nameElement.value;
+    const updatedName = usernameElement.value;
     const updatedEmail = emailElement.value;
     const updatedPassword = passwordElement.value;
     const updatedRole = roleElement.value;
@@ -500,7 +527,7 @@ function updateDETAILS(userId) {
 
     const formData = new FormData();
     formData.append('id', userId);
-    formData.append('name', updatedName);
+    formData.append('username', updatedName);
     formData.append('email', updatedEmail);
     formData.append('password', updatedPassword);
     formData.append('role_id', updatedRole);
@@ -528,27 +555,27 @@ function updateDETAILS(userId) {
     });
 }
 function addUser() {
-    const nameElement = document.querySelector('#user_name_new');
+    const usernameElement = document.querySelector('#user_name_new');
     const emailElement = document.querySelector('#user_email_new');
     const passwordElement = document.querySelector('#user_password_new');
     const roleElement = document.querySelector('#user_role_new');
     const verifiedElement = document.querySelector('#user_verified_new');
     const fileInput = document.querySelector('#user_profile_image_new');
 
-    if (!nameElement || !emailElement || !passwordElement || !roleElement || !verifiedElement || !fileInput) {
+    if (!usernameElement || !emailElement || !passwordElement || !roleElement || !verifiedElement || !fileInput) {
         console.error("One or more elements are missing.");
         alert("An error occurred: One or more elements are missing.");
         return;
     }
 
-    const newName = nameElement.value;
+    const newName = usernameElement.value;
     const newEmail = emailElement.value;
     const newPassword = passwordElement.value;
     const newRole = roleElement.value;
     const newIsVerified = verifiedElement.checked ? 1 : 0;
 
     const formData = new FormData();
-    formData.append('name', newName);
+    formData.append('username', newName);
     formData.append('email', newEmail);
     formData.append('password', newPassword);
     formData.append('role_id', newRole);

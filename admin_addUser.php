@@ -6,7 +6,7 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = htmlspecialchars($_POST['name']);
+    $username = htmlspecialchars($_POST['username']);
     $email = htmlspecialchars($_POST['email']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
     $role_id = htmlspecialchars($_POST['role_id']);
@@ -14,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $profile_image = '';
 
     // Insert user into database to get the user ID
-    $sql = "INSERT INTO users (name, email, password, role_id, is_verified) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO users (username, email, password, role_id, is_verified) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssii", $name, $email, $password, $role_id, $is_verified);
+    $stmt->bind_param("sssii", $username, $email, $password, $role_id, $is_verified);
 
     if ($stmt->execute()) {
         $userId = $stmt->insert_id; // Get the inserted user ID

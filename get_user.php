@@ -1,6 +1,13 @@
 <?php
+// Start the session to access session variables
+session_start();
+
+// Set headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+
+// header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+// header("Access-Control-Allow-Headers: Content-Type");
 
 $host = 'localhost';
 $username = 'root';
@@ -13,15 +20,16 @@ if ($conn->connect_error) {
     die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
 }
 
-$idx = isset($_GET['id']) ? intval($_GET['id']) : null;
+// Retrieve the user id from the session
+$idx = isset($_SESSION['id']) ? intval($_SESSION['id']) : null;
 
 if ($idx === null) {
-    echo json_encode(["error" => "Missing or invalid 'id' parameter"]);
+    echo json_encode(["error" => "User not logged in or session expired"]);
     $conn->close();
     exit;
 }
 
-$sql = "SELECT id, name, email, role_id FROM users WHERE id = ?";
+$sql = "SELECT id, username, email, role_id FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 
 if ($stmt === false) {
@@ -34,17 +42,26 @@ $stmt->bind_param("i", $idx);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$clients = [];
+
 if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $clients[] = $row;
-    }
+    $user = $result->fetch_assoc();
+    echo json_encode(["success" => true, "id" => $user['id'], "role_id" => $user['role_id']]);
+} else {
+    echo json_encode(["success" => false, "message" => "No user found with the given ID"]);
 }
 
-echo json_encode($clients);
+
+
+// $clients = [];
+// if ($result->num_rows > 0) {
+//     while ($row = $result->fetch_assoc()) {
+//         $clients[] = $row;
+//     }
+// }
+
+// echo json_encode($clients);
 
 $stmt->close();
 $conn->close();
 ?>
-
 

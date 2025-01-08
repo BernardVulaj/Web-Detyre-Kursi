@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+            Register Page
+        </title>
+        <link rel="stylesheet" href="css/register.css">
+
+    </head>
+    <body>
+        <form id="form" action="verifyEmail.html">
+            <h1>Regjistrohu</h1>
+            <div class="startEnd">
+                <label id="kaAccountLabel">Keni account ekzistues?</label>
+                <a id="regjistrohuLink" href="login.html">Login</a>
+            </div>
+                
+            <label class="labels">Username</label>
+            <input type="text" id="usernameInput" placeholder="Shembull" required>
+
+            <label class="labels">Adresa email</label>
+            <input type="email" id="emailInput" placeholder="shembull@domain.com" required>
+               
+            <label class="labels">Fjalekalimi</label>
+            <input type="password" id="passwordInput" placeholder="Jepni 8 ose me shume karaktere" required>
+
+            
+            <button id="registerButton">REGJISTROHU</button>
+        </form>
+        
+        <script>
+            
+            document.getElementById("registerButton").addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent form from submitting normally
+
+                // Get form input values
+                const username = document.getElementById("usernameInput").value;
+                const email = document.getElementById("emailInput").value;
+                const password = document.getElementById("passwordInput").value;
+
+                const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*[-._!#$%&?])[A-Za-z\d!#$%&?]{8,255}$/;
+                const usernameRegex = /[A-Za-z][A-Za-z0-9._!#$%&?-]{2,20}$/;
+
+                if (!emailRegex.test(email)) {
+                    alert("Ju lutem jepni nje email valid.");
+                    return;
+                }
+                if (!passwordRegex.test(password)) {
+                    alert("Fjalekalimi duhet te kete se pakti 8 karaktere, nje shkronje dhe nje karakter special.");
+                    return;
+                }
+                if (!usernameRegex.test(username)) {
+                    alert("Ju lutem jepni nje username valid.");
+                    return;
+                }
+
+                // Create an object to hold the form data
+                const data = {
+                    username: username,
+                    email: email,
+                    password: password,
+                    action: "register"
+                };
+
+                // Send the data to the PHP script using fetch
+                fetch("registerLogin.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json", // We are sending JSON data
+                    },
+                    body: JSON.stringify(data) // Convert the object to JSON string
+                })
+                .then(response => response.json()) // Parse JSON response from PHP
+                .then(data => {
+                    if (data.success) {
+                        alert("Perdoruesi u rregjistrua me sukses!");
+                        window.location.href = "verifyEmail.html"; // Redirect to login page after successful registration
+                    } else {
+                        alert("Error: " + data.message); // Display error message if there's an issue
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        </script>
+
+        <script src="sessionTimeout.js"></script>
+        
+    </body>
+</html>

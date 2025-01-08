@@ -6,7 +6,7 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = htmlspecialchars($_POST['name']);
+    $username = htmlspecialchars($_POST['username']);
     $email = htmlspecialchars($_POST['email']);
     $role_id = htmlspecialchars($_POST['role_id']);
     $is_verified = htmlspecialchars($_POST['is_verified']);
@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $sql = "UPDATE users SET name = ?, email = ?, role_id = ?, is_verified = ?";
-    $params = [$name, $email, $role_id, $is_verified];
+    $sql = "UPDATE users SET username = ?, email = ?, role_id = ?, is_verified = ?";
+    $params = [$username, $email, $role_id, $is_verified];
 
     if ($password_hashed) {
         $sql .= ", password = ?";

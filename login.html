@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+            Login Page
+        </title>
+        <link rel="stylesheet" href="css/login.css">
+
+    </head>
+    <body>
+        <form id="form" >
+            <h1 id="header">Login</h1>
+            <div class="startEnd">
+                <label id="nukKaAccountLabel">Nuk keni account akoma?</label>
+                <a id="regjistrohuLink" href="register.html">Regjistrohu</a>
+            </div>
+            <span id="rememberMeTrue"></span><br>
+                
+            <label class="labels">Adresa email</label>
+            <input type="email" id="emailInput" placeholder="shembull@domain.com">
+               
+            <div class="startEnd">
+                <label class="labels">Fjalekalimi</label>
+                <a id="harruaFjalekalimiLink" href="enterResetPassword.html">Nuk e mbani mend fjalekalimin?</a>
+            </div>
+            <input type="password" id="passwordInput" placeholder="Jepni 8 ose me shume karaktere">
+
+            <div id="meKujtoContainer">
+                <input type="checkbox"> 
+                <label>Me kujto</label>
+            </div>
+            <button id="loginButton">LOGIN</button>
+        </form>
+        
+        <script>
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? match[2] : null;
+            }
+            // Check if "remember_token" cookie exists and is valid
+            const rememberToken = getCookie('remember_token');
+            if (rememberToken) {
+                fetch("registerLogin.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ rememberToken: rememberToken, action: "rememberMe" })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("rememberMeTrue").innerText = "Mirservini, "+data.username+"";
+                        document.getElementById('emailInput').value = data.email;
+                        document.getElementById('passwordInput').value = "";
+                        document.getElementById('meKujtoContainer').querySelector("input").checked = true;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+            else{
+                document.getElementById("rememberMeTrue").innerText = "";
+            }
+
+            document.getElementById("loginButton").addEventListener("click", function(event){
+                event.preventDefault();  // Prevent the form from submitting normally
+
+                // Get the user input values
+                const email = document.getElementById("emailInput").value;
+                const password = document.getElementById("passwordInput").value;
+                const rememberMe = document.getElementById("meKujtoContainer").querySelector("input").checked;
+
+                const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*[-._!#$%&?])[A-Za-z\d!#$%&?]{8,255}$/;
+
+                if (!emailRegex.test(email)) {
+                    alert("Ju lutem jepni nje email valid.");
+                    return;
+                }
+                if (!passwordRegex.test(password)) {
+                    alert("Fjalekalimi duhet te kete se pakti 8 karaktere, nje shkronje dhe nje karakter special.");
+                    return;
+                }
+                
+                // Create an object to hold the user data
+                const loginData = {
+                    email: email,
+                    password: password,
+                    rememberMe: rememberMe,
+                    action: "login"
+                };
+
+                // Send the data to the PHP backend using fetch()
+                fetch("registerLogin.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(loginData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success && !data.verified){
+                        alert("Duhet te verifikoni emailin.")
+                        // Send a request to the PHP script to generate and send a new verification code
+                        window.location.href = "verifyEmail.html";
+                    }
+                    else if (data.success && data.verified) {
+                        alert(data.message);
+                        window.location.href = "profile.html"; 
+
+                    } else {
+                        alert(data.message);  // Display error message
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            });
+
+
+        </script>
+        <script src="sessionTimeout.js"></script>
+
+    </body>
+</html>

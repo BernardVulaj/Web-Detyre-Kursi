@@ -29,7 +29,7 @@ if ($idx === null) {
 
 // Prepare statement
 $sql = "SELECT id, 
-               name, 
+               username, 
                email, 
                profile_image, 
                role_id, 

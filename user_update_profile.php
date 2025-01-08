@@ -8,10 +8,10 @@ if ($conn->connect_error) {
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize inputs
-    $name = htmlspecialchars(trim($_POST['name']));
+    $username = htmlspecialchars(trim($_POST['username']));
     $email = htmlspecialchars(trim($_POST['email']));
     $password = $_POST['password']; // Will hash later
-    $profile_picture = $_FILES['profile_picture']['name'];
+    $profile_picture = $_FILES['profile_picture']['username'];
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo "Invalid email format.";
@@ -45,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $sql = "UPDATE users SET name = ?, email = ?";
-    $params = [$name, $email];
+    $sql = "UPDATE users SET username = ?, email = ?";
+    $params = [$username, $email];
     $types = "ss";
 
     if ($hashed_password) {

@@ -19,18 +19,14 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Optional limit/offset
-$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
-$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+
 
 // Example query
-$sql = "SELECT id, name, email 
+$sql = "SELECT id, username, email 
         FROM users
-        ORDER BY name
-        LIMIT ? OFFSET ?";
+        ORDER BY username";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $limit, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 

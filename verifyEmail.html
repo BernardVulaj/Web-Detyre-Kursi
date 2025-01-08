@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+            Verify Email Page
+        </title>
+        <link rel="stylesheet" href="css/verifyEmail.css">
+
+    </head>
+    <body>
+        <form id="form">
+            <h1>Verifiko emailin</h1>
+
+            <label id="firstLabel">Nje kod verifikimi eshte derguar ne emailin tuaj.</label><br>
+            <label>Ju lutem shkruani kodin e marre me poshte per te verifikuar adresen tuaj te emailit.</label>
+
+            <input type="number" id="kodiVerifikimitInput" placeholder="kodi 6 shifror">
+            <button id="verifyButton">VERIFIKO</button>
+            <button id="ridergoKodin">RIDERGO KODIN</button>
+            <a id="ndryshoEmailin" href="register.html">NDRYSHO EMAILIN</a>
+        </form>
+
+        <script>
+            window.addEventListener('load', function(event){
+                event.preventDefault();
+
+                fetch('registerLogin.php', {
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: JSON.stringify({action: "sendVerificationCode"})
+
+                    
+                })
+                .then(response => response.text()) // First, handle as text to see the raw response
+                .then(responseText => {
+                    console.log('Raw response:', responseText); // Log the raw response text to check it
+                    try {
+                        const data = JSON.parse(responseText); // Now try to parse the response as JSON
+                        if (data.success) {
+                            // alert("A new verification code has been sent to your email.");
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    } catch (e) {
+                        console.error('Error parsing JSON:', e);
+
+                        alert("Ka ndodhur nje gabim gjate dergimit te kodit ne email.");
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Ka ndodhur nje gabim gjate dergimit te kodit ne email.");
+
+                });
+            });
+
+            document.getElementById('ridergoKodin').addEventListener('click', function(event) {
+                
+                event.preventDefault();
+                const button = event.target;
+                button.disabled = true;
+                // Send a request to the PHP script to generate and send a new verification code
+                fetch('registerLogin.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: JSON.stringify({action: "sendVerificationCode"})
+
+                    
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response (you can show a message to the user)
+                    if (data.success) {
+                        alert("Nje kod verifikimi eshte derguar ne email");
+                    } else {
+                        alert("Error: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Ka ndodhur nje gabim gjate dergimit te kodit ne email.");
+                })
+                .finally(() => {
+                    button.disabled = false;
+                });
+            });
+
+
+            document.getElementById("verifyButton").addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent default form submission
+                
+                const enteredCode = document.getElementById("kodiVerifikimitInput").value;
+
+                const codeRegex = /^\d{6}$/;
+
+                if (!codeRegex.test(enteredCode)) {
+                    alert("Kodi duhet te kete 6 shifra");
+                    return;
+                }
+                
+                // Send the verification code to the server for validation
+                fetch("verifyEmail.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ verificationCode: enteredCode, verify: true, action: "verifyEmailInDatabase"})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.success) {
+                        alert("Emaili eshte verifikuar me sukses!");
+                        window.location.href = "login.html"; // Redirect to login page after successful verification
+                    } else {
+                        alert("Gabim: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+            document.getElementById('ndryshoEmailin').addEventListener('click', function(event) {
+                window.location.href = "register.html"; // Redirect to login page after successful verification
+
+            });
+
+            
+            
+        </script>
+        <script src="sessionTimeout.js"></script>
+
+    </body>
+</html>
