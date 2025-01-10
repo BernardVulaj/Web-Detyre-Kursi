@@ -1,0 +1,260 @@
+#filterBtn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  margin: 20px;
+}
+
+#filterBtn:hover {
+  background-color: #45a049;
+}
+
+/* Modal Background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  padding-top: 60px;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  position: relative;
+}
+
+/* Close Button (X) */
+.close {
+  color: #aaa;
+  font-size: 30px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modalBtn-container{
+ display: flex;
+ gap:0.9rem;
+ justify-content: center;
+}
+.modalBtn{
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+/* Apply Button */
+#applyBtn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#applyBtn:hover {
+  background-color: #45a049;
+}
+#removeBtn {
+  background-color: rgb(209, 38, 38);
+}
+
+#removeBtn:hover {
+  background-color: rgb(148, 22, 22);
+}
+
+
+.radio-container {
+  display: flex;
+  /* flex-direction: ; */
+  align-self:start;
+  /* background-color: red; */
+  gap: 20px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* Hide default radio buttons */
+.custom-radio input[type="radio"] {
+  display: none;
+}
+
+/* Style for the labels */
+.custom-radio label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  cursor: pointer;
+  padding-left: 35px; /* Space for the custom radio button */
+}
+
+/* Custom radio button style */
+.custom-radio label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #4CAF50; /* Green border */
+  background-color: white;
+  transition: background-color 0.3s, border 0.3s;
+}
+
+/* Checked radio button style */
+.custom-radio input[type="radio"]:checked + label::before {
+  background-color: #4CAF50; /* Green background when checked */
+  border-color: #4CAF50;
+}
+
+/* Inner dot when radio button is checked */
+.custom-radio input[type="radio"]:checked + label::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+/* Hover effect for the radio button */
+.custom-radio label:hover::before {
+  border-color: #45a049; /* Darker green on hover */
+}
+
+/* Focus effect for the radio button */
+.custom-radio input[type="radio"]:focus + label::before {
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); /* Green focus outline */
+}
+
+/* Style for the container title */
+.radio-container h2 {
+  text-align: center;
+  font-size: 20px;
+  color: #333;
+}
+
+/*  */
+.price-container {
+  /* position: relative; */
+  align-self: center;
+}
+
+/* Style the number input box */
+.price-container input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #4CAF50; /* Green border */
+  border-radius: 5px;
+  outline: none;
+  background-color: white;
+  color: #333;
+  text-align: center;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+/* Focus effect for input */
+.price-container input[type="number"]:focus {
+  border-color: #45a049;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green glow */
+}
+
+/* Hide default spinner (up and down arrows) */
+.price-container input::-webkit-outer-spin-button,
+.price-container input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* Optional: Add custom up and down buttons (using ::after and ::before) */
+.price-container button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Style the up button */
+.price-container button.up {
+  border-radius: 5px 0 0 5px;
+}
+
+/* Style the down button */
+.price-container button.down {
+  border-radius: 0 5px 5px 0;
+}
+
+/* Button hover effects */
+.price-container button:hover {
+  background-color: #45a049;
+}
+
+/*  */
+.select-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.select-container p{
+  align-self: start;
+}
+
+.select-container select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+  width: 200px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s;
+}
+
+select:focus {
+  border-color: rgb(29, 138, 29);
+}
+
+option {
+  font-size: 16px;
+}
