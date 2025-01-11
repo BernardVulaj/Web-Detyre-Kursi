@@ -35,10 +35,14 @@
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  gap:10px;
   width: 30%;
   position: relative;
 }
 
+.modal-content p{
+  margin:0;
+}
 /* Close Button (X) */
 .close {
   color: #aaa;
@@ -91,7 +95,10 @@
   display: flex;
   align-self: start;
   gap: 20px;
+  padding: 0.8rem 0.7rem;
   max-width: 300px;
+  border-radius: 0.2rem;
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0,0.2); */
   margin: 0 auto;
 }
 
@@ -165,6 +172,11 @@
 .price-container {
   /* position: relative; */
   align-self: center;
+  border-radius: 0.5rem;
+  /* padding: 0.8rem 0.6rem; */
+  box-shadow: 0 4px 10px rgba(0, 0, 0,0.2);
+
+
 }
 
 /* Style the number input box */
@@ -179,7 +191,7 @@
   color: #333;
   text-align: center;
   box-sizing: border-box;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
 }
 
 /* Focus effect for input */
@@ -230,10 +242,11 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0,0.2); */
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap:10px;
 }
 .select-container p{
   align-self: start;
@@ -247,7 +260,10 @@
   outline: none;
   width: 200px;
   background-color: #f9f9f9;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
+}
+#mode{
+  box-shadow: 0 4px 10px rgba(0, 0, 0,0.2);
 }
 
 select:focus {

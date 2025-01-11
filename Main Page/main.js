@@ -1,12 +1,12 @@
 const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path to your file location
 
-    let cars = [];
+    export let cars = [];
     let currentPage = 1;
     const carsPerPage = 3; // Show 3 cars per page
     let totalPages = 0;
 
     // Function to fetch car details
-    async function getCarDetails() {
+    export async function getCarDetails() {
       try {
         const response = await fetch(apiUrl);  // Fetch the data from the API
         const data = await response.json();    // Parse the JSON response
@@ -25,6 +25,9 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
       }
     }
 
+    export function setCars(t){
+      cars=t;
+    }
     export function displayCars(carsToDisplay) {
       const doc = document.querySelector('main');
       let html = '';
@@ -76,7 +79,7 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
         pageLink.addEventListener('click', (event) => {
           event.preventDefault();
           currentPage = i;
-          paginateCars();
+          paginateCars(cars);
         });
 
         pageLinksContainer.appendChild(pageLink);
@@ -91,10 +94,11 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
       nextButton.classList.toggle("disabled", currentPage === totalPages);
     }
 
-    function paginateCars() {
+    export function paginateCars(cars) {
       // Slice the cars array based on the current page and display the corresponding cars
       const start = (currentPage - 1) * carsPerPage;
       const end = currentPage * carsPerPage;
+      // console.log(cars)
       const carsToDisplay = cars.slice(start, end);
 
       displayCars(carsToDisplay);
@@ -105,21 +109,27 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
     document.getElementById("prev-btn").addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
-        paginateCars();
+        paginateCars(cars);
       }
     });
 
     document.getElementById("next-btn").addEventListener("click", () => {
       if (currentPage < totalPages) {
         currentPage++;
-        paginateCars();
+        paginateCars(cars);
       }
+      // console.log(filters)
+      // console.log(filterCars(cars))
+
+
     });
 
+    
+
     // Call the function to fetch and display car details
-    async function fetchAndDisplayCars() {
+    export async function fetchAndDisplayCars() {
       await getCarDetails();  // Fetch car details from the API
-      paginateCars();  // Display the first page of cars
+      paginateCars(cars);  // Display the first page of cars
     }
 
     fetchAndDisplayCars();  // Initial call to fetch and display cars
