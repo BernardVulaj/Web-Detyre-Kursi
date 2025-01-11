@@ -1,102 +1,128 @@
-body {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('wallpaper.jpg');
-    background-size: cover;      /* Ensures the background image covers the entire viewport */
-    background-position: center;
-    height: 100vh;               /* Sets the height of the body to be 100% of the viewport height */
-    margin: 0;  
-}
-
-
-#header{
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-content: space-between;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: x-large;
-    height: 80px;
-    border-bottom: white 1px solid;
-    margin-left: 40px;
-    margin-right: 40px;
-
-}
-#navigationBar{
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    justify-content: space-around;
-    padding: 40px;
-    column-gap: 60px;
-    
-
-}
-
-
-a{
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: x-large;
-    color: white;
-    font-weight: bold;
-
-   /* display: flex;
-   /* align-items:end; /* Centers the content vertically */
-    /*justify-content: center; /* Centers the content horizontally */
-    /*height: 100%; /* Ensure the label takes the full height of its container */
-    cursor: pointer; 
+/* General Reset */
+body, h1, h2, h3, p, a {
+    margin: 0;
+    padding: 0;
     text-decoration: none;
-    opacity: 80%;
-    
-}
-a:hover{
-    opacity: 100%;
+    box-sizing: border-box;
 }
 
 
 
-#profileLink{
+
+/* Header Styling */
+#header {
+    background-color: #cce7ff; /* Light blue */
+    color: #333;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+#navigationBar {
+    display: flex;
+    gap: 20px;
+}
+
+#navigationBar a {
+    color: #333;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+}
+
+#navigationBar a:hover {
+    color: #007acc; /* Medium blue hover effect */
+    border-bottom: 2px solid #007acc;
+}
+
+/* Profile Link Styling */
+#profileLink {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#profileImage {
     width: 40px;
     height: 40px;
-    margin: 20px;
-    border-radius: 20px;
-    cursor: pointer; 
-
-
+    border-radius: 50%;
+    border: 2px solid #007acc; /* Accent border */
+    transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-#profileImage{
-    width: 40px; 
-    height: 40px; 
-    border-radius: 20px;
-
-}
-#mesazhiContainer{
-    width: 650px;
-    padding-left: 80px;
-    padding-top: 150px;
-
+#profileImage:hover {
+    transform: scale(1.1);
+    border-color: #333;
 }
 
-#mesazhi{
-    color: white;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-
-    font-size: xxx-large;
-    font-weight: bold;
-    
-
-    
-}
-#makinatTona{
+/* Message Container Styling */
+#mesazhiContainer {
     display: flex;
-    justify-self: center;
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* Center text vertically */
+    background-color: rgba(204, 231, 255, 0.9); /* Light blue with transparency */
+    color: #333;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
 
-    font-size: xx-large;
+#mesazhi {
+    font-size: 2rem; /* Larger text size */
+    font-weight: 600;
+    text-align: center;
+}
 
-    background: none;
-    cursor: pointer; 
+/* Button Styling */
+#makinatTona {
+    display: block;
+    margin: 40px auto;
+    padding: 20px 40px; /* Larger button */
+    background-color: #007acc; /* Medium blue button */
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    max-width: 300px;
+}
 
-    border: solid 4px white;
-    margin-top: 85px;
+#makinatTona:hover {
+    background-color: #005b99; /* Darker blue on hover */
+    transform: translateY(-5px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #navigationBar {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    #profileImage {
+        width: 35px;
+        height: 35px;
+    }
+
+    #mesazhiContainer {
+        padding: 20px;
+    }
+
+    #makinatTona {
+        width: 90%;
+        font-size: 1rem;
+    }
 }
