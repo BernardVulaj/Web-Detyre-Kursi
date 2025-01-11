@@ -1,73 +1,97 @@
 $(document).ready(function() {
     // Hide all profile sections initially
-    toggleProfileSections({ user: false, list: false, admin: false });
+    toggleProfileSections({ user: false, list: false, admin: false,addUser: false, menueadmin: false, car: false,addCar:false });
     get_user_main();
-    // Show only simulation
-    // $('#simulation').show();
 });
 
-// window.addEventListener('load', get_user_main);
-
-function toggleProfileSections({ user, list, admin, addUser }) {
+function toggleProfileSections({ user, list, admin, addUser, menueadmin, car,addCar}) {
     $('#profile_user').toggle(user);
     $('#profile_list').toggle(list);
     $('#profile_admin').toggle(admin);
     $('#add_user_form').toggle(addUser);
-    // $('#simulation').toggle(false); // Hide simulation by default
+    $('#menue_admin').toggle(menueadmin);
+    $('#car_list_form').toggle(car);
+    $('#car_details').toggle(addCar);
+    // $('#carDetailsModal').toggle(foto);
+    // $('#detailsContainer').toggle(pershkrimi);
 }
 
 function populateTable(tbodySelector, dataArray, fields) {
     const tbody = document.querySelector(tbodySelector);
+   
     tbody.innerHTML = ""; // Clear previous rows
     dataArray.forEach(item => {
         const row = document.createElement('tr');
+
+        row.id=item.id;
+        row.classList.add("container");
         fields.forEach(field => {
             const cell = document.createElement('td');
             cell.textContent = item[field] || '';
             row.appendChild(cell);
         });
-        row.addEventListener('click', () => goDETAILS(item.id)); //Conect the click with the function
+        
+        if (currentTableType === 'user') {//type eshte parametri qe i kalohet ne goDetails ose gocarDetails
+            row.addEventListener('click', () => goDETAILS(item.id)); // Connect the click with the function
+        } else if (currentTableType === 'car') {
+            row.addEventListener('click', () => showCarDetails()); // Connect the click with the function
+        }
+    
+
         tbody.appendChild(row);
     });
-     // Add the "Add User" button at the end of the table
+    // Add the "Add User" button at the end of the table
+    if (currentTableType === 'user') {
     tbody.insertAdjacentHTML('beforeend', `
         <tr>
-            <td colspan="3">
+            <td colspan="1">
                 <button onclick="showAddUserForm()">Add User</button>
+            </td>
+            <td colspan="1">
+                            <button onclick="signOut()">Sign Out</button>  
+                 </td>
+               <td colspan="1">
+                <button onclick="exit_list()">Exit</button>
             </td>
         </tr>
     `);
 }
+else if (currentTableType === 'car') {
+    tbody.insertAdjacentHTML('beforeend', `
+        <tr>
+            <td colspan="3">
+                <button onclick="showAddCarForm()">Add Car</button>
+            </td>
+            <td colspan="3">
+                            <button onclick="signOut()">Sign Out</button>  
+                 </td>
+             <td colspan="3">
+                <button onclick="exit_list()">Exit</button>
+            </td>
+        </tr>
+    `);
+}
+}
 
 function get_user_main() {
-    // const userId = $('[name="simulate"]').val();
-    // if (!userId) {
-    //     return;
-    // }
     $.ajax({
         url: 'get_user.php',
         method: 'GET',
-        // data: { id: 1 }, 
         dataType: 'json',
         success: (data) => {
             if (!data || data.length === 0) {
                 alert("User not found.");
                 return;
             }
-            // const user = data[0];
-            // const { id, role_id } = user;
 
-            role_id = data['role_id'];
-            user_id = data['id'];
-
+             role_id = data['role_id'];
+             user_id = data['id'];
             if (role_id === 1) {
-                alert('Get user list ad admnin' );
-                get_list();
-                toggleProfileSections({ user: false, list: true, admin: false });
+                alert('Get user list as admin');
+                toggleProfileSections({ user: false, list: false, admin: false, menueadmin: true, car: false,addCar:false });
             } else {
-                // alert('Get datas for regular user: '+userId);
                 get_user(user_id);
-                toggleProfileSections({ user: true, list: false, admin: false });
+                toggleProfileSections({ user: true, list: false, admin: false, menueadmin: false,car:false,addCar:false});
             }
         },
         error: (err) => {
@@ -75,43 +99,64 @@ function get_user_main() {
             alert("An error occurred while fetching user data.");
         }
     });
-    // $('#simulation').css({
-    // 	position: 'absolute',
-    // 	top: '0',
-    // 	right: '0'
-    // });
 }
 
-
 function get_list() {
+    currentTableType = 'user';
     $.ajax({
         url: 'admin_get_client_list.php',
         method: 'GET',
-        dataType: 'json',   // jQuery will parse JSON for you
+        dataType: 'json',
         success: response => {
-            // Check if status is "success"
             if (!response || response.status !== "success") {
                 alert("Error: " + (response ? response.message : "Unknown error"));
                 return;
             }
 
-            // response.data is already a JavaScript array
             const data = response.data;
 
             if (!data || data.length === 0) {
                 alert("No clients available.");
                 return;
             }
-            
-            // No need to JSON.parse(data), it’s already an array
+
             populateTable('#body-profile-list', data, ['id', 'username', 'email']);
+            toggleProfileSections({ user: false, list: true, admin: false, menueadmin: false, car: false,addCar:false }); // Show the list
         },
         error: err => {
             console.error("Error fetching client list:", err);
             alert("An error occurred while fetching the client list.");
         }
     });
-    
+}
+
+function get_car_list() {
+    currentTableType = 'car';
+    $.ajax({
+        url: 'admin_get_carlist.php',
+        method: 'GET',
+        dataType: 'json',
+        success: response => {
+            if (!response || response.status !== "success") {
+                alert("Error: " + (response ? response.message : "Unknown error"));
+                return;
+            }
+
+            const data = response.data;
+
+            if (!data || data.length === 0) {
+                alert("No cars available.");
+                return;
+            }
+
+            populateTable('#body-profile-details-cars-list', data, ['name', 'price_per_day', 'type']);
+            toggleProfileSections({ user: false, list: false, admin: false, menueadmin: false, car: true,addCar:false}); // Show the car list
+        },
+        error: err => {
+            console.error("Error fetching car list:", err);
+            alert("An error occurred while fetching the car list.");
+        }
+    });
 }
 
 function get_user(userId) {
@@ -130,7 +175,6 @@ function get_user(userId) {
         }
     });
 }
-
 function goDETAILS(userId) {
     $.ajax({
         url: 'admin_get_client_select.php',
@@ -148,52 +192,99 @@ function goDETAILS(userId) {
     });
     
 }
-
+function go_carsDETAILS(carId) {
+    $.ajax({
+        url: 'admin_get_car_select.php',
+        data: { id: carId },
+        method: 'GET',
+        dataType: 'json',
+	success: car => {
+    	window.location.href = `car_details.php?id=${carId}`;
+        },
+        error: function (err) {
+            console.error("Error fetching client details:", err);
+            alert("An error occurred while fetching client details.");
+        }
+    });
+    
+}
 function showAddUserForm() {
     // Hide all sections and show the add user form
-    toggleProfileSections({ user: false, list: false, admin: false, addUser: true });
+    toggleProfileSections({ user: false, list: false, admin: false,car:false,menueadmin:false, addUser: true,addCar:false});
 
     // Add the form for adding a new user
     const formContainer = document.createElement('div');
     formContainer.id = 'add_user_form';
     formContainer.innerHTML = `
         <h2>Add New User</h2>
-        <table>
-            <tr>
-                <td><input type="text" id="user_name_new" placeholder="Username"></td>
-                <td><input type="text" id="user_email_new" placeholder="Email"></td>
-                <td><input type="password" id="user_password_new" placeholder="Password"></td>
-                <td><input type="number" id="user_role_new" placeholder="Role ID"></td>
-                <td><input type="checkbox" id="user_verified_new"> Verified</td>
-                <td><input type="file" id="user_profile_image_new" accept="image/*"></td>
-                </tr>
-                <tr>
-                <td>
-                    <button onclick="submitNewUser()">Submit</button>
-                    <button onclick="cancelAddUser()">Cancel</button>
-                </td>
-            </tr>
-        </table>
+<table>
+    <tr>
+        <td><input type="text" id="user_name_new" placeholder="Username"></td>
+    </tr>
+    <tr>
+        <td><input type="text" id="user_fullname_new" placeholder="Emri i Plote"></td>
+    </tr>
+    <tr>
+        <td><input type="text" id="user_address_new" placeholder="Adresa"></td>
+    </tr>
+    <tr>
+        <td><input type="tel" id="user_phone_number_new" placeholder="Nr.Telefoni"></td>
+    </tr>
+    <tr>
+        <td><input type="text" id="user_email_new" placeholder="Email"></td>
+    </tr>
+    <tr>
+        <td><input type="password" id="user_password_new" placeholder="Password"></td>
+    </tr>
+    <tr>
+        <td><input type="number" id="user_role_new" placeholder="Role ID"></td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" id="user_verified_new"> Verified</td>
+    </tr>
+    <tr>
+        <td><input type="file" id="user_profile_image_new" accept="image/*"></td>
+    </tr>
+    <tr>
+        <td>
+            <button onclick="submitNewUser()">Submit</button>
+            <button onclick="cancelAddUser()">Cancel</button>
+        </td>
+    </tr>
+</table>
     `;
     document.body.appendChild(formContainer);
 }
+function showAddCarForm(){
+    toggleProfileSections({ user: false, list: false, admin: false,addUser: false, menueadmin: false, car: false,addCar:true});
+
+}
 function cancelAddUser() {
     // Show the client list table
-    toggleProfileSections({ user: false, list: true, admin: false, addUser: false });
+    toggleProfileSections({ user: false, list: true, admin: false, addUser: false,addCar:false,menueadmin:false,car:false });
 
     // Remove the add user form
     document.querySelector('#add_user_form').remove();
 }
+function cancelAddCar() {
+    // Show the client list table
+        toggleProfileSections({ user: false, list: false, admin: false,addUser: false, menueadmin: false, car: true,addCar:false });
+
+}
 function submitNewUser() {
     const usernameElement = document.querySelector('#user_name_new');
     const emailElement = document.querySelector('#user_email_new');
+    const fullnameElement= document.querySelector('#user_fullname_new');
+    const addressElement= document.querySelector('#user_address_new');
+    const telephoneElement= document.querySelector('#user_phone_number_new');
     const passwordElement = document.querySelector('#user_password_new');
     const roleElement = document.querySelector('#user_role_new');
     const verifiedElement = document.querySelector('#user_verified_new');
     const fileInput = document.querySelector('#user_profile_image_new');
 
     // Check if all required fields are filled
-    if (!usernameElement.value.trim() || !emailElement.value.trim() || !passwordElement.value.trim() || !roleElement.value.trim()) {
+    if (!usernameElement.value.trim() || !fullnameElement.value.trim() || !addressElement.value.trim() || !telephoneElement.value.trim() ||
+     !emailElement.value.trim() || !passwordElement.value.trim() || !roleElement.value.trim()) {
         alert("Please fill in all required fields.");
         return;
     }
@@ -228,6 +319,9 @@ function submitNewUser() {
                 const newPassword = passwordElement.value;
                 const newRole = roleElement.value;
                 const newIsVerified = verifiedElement.checked ? 1 : 0;
+                const newFullname= fullnameElement.value;
+                const newAddress= addressElement.value;
+                const newTelephone= telephoneElement.value;
 
                 const formData = new FormData();
                 formData.append('username', newName);
@@ -235,6 +329,10 @@ function submitNewUser() {
                 formData.append('password', newPassword);
                 formData.append('role_id', newRole);
                 formData.append('is_verified', newIsVerified);
+                formData.append('fullname', newFullname);
+                formData.append('address', newAddress);
+                formData.append('telephone', newTelephone);
+               
 
                 if (fileInput.files.length > 0) {
                     formData.append('profile_picture', fileInput.files[0]);
@@ -250,7 +348,7 @@ function submitNewUser() {
                         console.log(response);
                         alert('User added successfully!');
                         // Show the client list table again
-                        toggleProfileSections({ user: false, list: true, admin: false, addUser: false });
+                        toggleProfileSections({ user: false, list: true, admin: false, addUser: false,menueadmin:false,addCar:false });
                         // Remove the add user form
                         document.querySelector('#add_user_form').remove();
                         // Refresh the client list
@@ -269,7 +367,62 @@ function submitNewUser() {
         }
     });
 }
+function submitNewCar() {
+    const nameElement = document.querySelector('#name_new');
+    const priceElement = document.querySelector('#price_per_day_new');
+    const fuelElement = document.querySelector('#fuel_new');
+    const seatsElement = document.querySelector('#seating_capacity_new');
+    const engineElement = document.querySelector('#engine_new');
+    const transmissionElement = document.querySelector('#transmission_new');
+    const yearElement = document.querySelector('#year_new');
+    const bluetoothElement = document.querySelector('#bluetooth_new');
+    const gpsElement = document.querySelector('#gps_new');
+    const colorElement = document.querySelector('#color_new');
+    const typeElement = document.querySelector('#type_new');
+    const fileInput = document.querySelector('#profile_pictures_new');
 
+    if (!nameElement.value.trim() || !priceElement.value.trim() || !fuelElement.value.trim() || !seatsElement.value.trim() ||
+        !engineElement.value.trim() || !transmissionElement.value.trim() || !yearElement.value.trim() || !colorElement.value.trim() || !typeElement.value.trim()) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('name', nameElement.value);
+    formData.append('price_per_day', priceElement.value);
+    formData.append('fuel', fuelElement.value);
+    formData.append('seating_capacity', seatsElement.value);
+    formData.append('engine', engineElement.value);
+    formData.append('transmission', transmissionElement.value);
+    formData.append('year', yearElement.value);
+    formData.append('bluetooth', bluetoothElement.checked ? 1 : 0);
+    formData.append('gps', gpsElement.checked ? 1 : 0);
+    formData.append('color', colorElement.value);
+    formData.append('type', typeElement.value);
+
+    if (fileInput.files.length > 0) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+            formData.append('profile_pictures[]', fileInput.files[i]);
+        }
+    }
+    $.ajax({
+        url: 'admin_addCar.php',
+        method: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: response => {
+            console.log(response);
+            alert('Car added successfully!');
+            toggleProfileSections({ user: false, list: false, admin: false, addUser: false, menueadmin: false, car: true, addCar: false });
+            get_car_list();
+        },
+        error: err => {
+            console.error("Error adding car:", err);
+            alert("An error occurred while adding the car.");
+        }
+    });
+}
 function exit_admin() {
     // Fsheh seksionin e profilit të administratorit
     $('#profile_admin').hide();
@@ -280,6 +433,9 @@ function exit_admin() {
 
     // Mund të shtosh ndonjë logjikë tjetër që dëshiron këtu
     console.log("Exited admin profile view.");
+}
+function exit_list(){
+    toggleProfileSections({user: false, list: false, admin: false, addUser: false, menueadmin: true, car: false, addCar: false});
 }
 
 function populateDetails(tbodySelector, user) {
@@ -327,6 +483,65 @@ function populateDetails(tbodySelector, user) {
     tbody.appendChild(rowName);
 
     // =========
+    // Emri i Plote
+    // =========
+    let rowEmriPlote = document.createElement('tr');
+    
+    let thEmriPlote = document.createElement('td');
+    thEmriPlote.textContent = 'Emri i Plote';
+    
+    let tdEmriPloteValue = document.createElement('td');
+    let inputEmriPlote = document.createElement('input');
+    inputEmriPlote.type = 'text';
+    inputEmriPlote.value = user.full_name;
+    inputEmriPlote.id = 'emri_plote_' + user.id; // or some unique ID
+    
+    tdEmriPloteValue.appendChild(inputEmriPlote);
+    rowEmriPlote.appendChild(thEmriPlote);
+    rowEmriPlote.appendChild(tdEmriPloteValue);
+    tbody.appendChild(rowEmriPlote);
+
+// =========
+    // Adresa
+    // =========
+    let rowAdresa = document.createElement('tr');
+    
+    let thAdresa = document.createElement('td');
+    thAdresa.textContent = 'Adresa';
+    
+    let tdAdresaValue = document.createElement('td');
+    let inputAdresa = document.createElement('input');
+    inputAdresa.type = 'text';
+    inputAdresa.value = user.address;
+    inputAdresa.id = 'adresa' + user.id; // or some unique ID
+    
+    tdAdresaValue.appendChild(inputAdresa);
+    rowAdresa.appendChild(thAdresa);
+    rowAdresa.appendChild(tdAdresaValue);
+    tbody.appendChild(rowAdresa);
+
+    
+    // =========
+    // Nr.teli
+    // =========
+    let rowtel = document.createElement('tr');
+    
+    let thtel = document.createElement('td');
+    thtel.textContent = 'Nr.Telefonit';
+    
+    let tdtelValue = document.createElement('td');
+    let inputtel = document.createElement('input');
+    inputtel.type = 'tel';// e specifikuar nga html vtm per nr telefoni
+    inputtel.value = user.phone_number;
+    inputtel.id = 'tel' + user.id; // or some unique ID
+    
+    tdtelValue.appendChild(inputtel);
+    rowtel.appendChild(thtel);
+    rowtel.appendChild(tdtelValue);
+    tbody.appendChild(rowtel);
+
+
+    // =========
     // EMAIL
     // =========
     let rowEmail = document.createElement('tr');
@@ -344,9 +559,12 @@ function populateDetails(tbodySelector, user) {
     rowEmail.appendChild(thEmail);
     rowEmail.appendChild(tdEmailValue);
     tbody.appendChild(rowEmail);
+
+    
     // =========
     // PASSWORD
     // =========
+    if(role_id==1){
     let rowPassword = document.createElement('tr');
     
     let thPassword = document.createElement('td');
@@ -361,20 +579,20 @@ function populateDetails(tbodySelector, user) {
     rowPassword.appendChild(thPassword);
     rowPassword.appendChild(tdPasswordValue);
     tbody.appendChild(rowPassword);
-
+}
     // ==========================
     // PROFILE IMAGE (DISPLAY + INPUT)
     // ==========================
     let rowProfile = document.createElement('tr');
     
     let thProfile = document.createElement('td');
-    thProfile.textContent = 'Profile Image';
+    thProfile.textContent = 'Foto Profili';
     
     let tdProfileValue = document.createElement('td');
 
  	// 1) Display the existing image
      let imgElement = document.createElement('img');
-     let imagePath = user.profile_image; // Path-i i plotë tashmë përfshin direktorinë 'images/'
+     let imagePath = 'images/' +user.profile_image; // Path-i i plotë tashmë përfshin direktorinë 'images/'
      imgElement.src = imagePath;
      imgElement.alt = "User Profile Image";
      imgElement.style.maxWidth = '100px';
@@ -495,9 +713,7 @@ function populateDetails(tbodySelector, user) {
                  style="height:50px; width:50px; float:left;" 
                  onclick="exit_admin();">
                  </td>
-                 <td colspan="2">
-                            <button onclick="signOut()">Sign Out</button>  
-                 </td>
+                 
                  <td colspan="2">
             <img id="picture5" src="images/edit-user.png" 
                  style="height:50px; width:50px; float:right;" 
@@ -514,13 +730,10 @@ function populateDetails(tbodySelector, user) {
     }else{
         tbody.insertAdjacentHTML('beforeend', `
             <tr>
-              <td colspan="2">
+              <td colspan="1">
                      <button onclick="signOut()">Sign Out</button>  
                      </td>
-                     <td colspan="2">
-                      <img id="picture4" src="images/delete.png" 
-                     style="height:50px; width:50px; float:right;" 
-                     onclick="deleteUser(${user.id});">
+                     <td colspan="1">
                 <button onclick="updateUser(${user.id})">Update User</button>
                      </td>
     
@@ -541,8 +754,7 @@ function signOut() {
         success: function(response) {
             console.log('Logout response:', response);
             // If successful, redirect the user to the login page
-            window.location.href = 'login.html'; 
-            // or wherever your user should land after logging out
+            window.location.href = 'index.php'; 
         },
         error: function(err) {
             console.error('Logout error:', err);
@@ -559,11 +771,15 @@ function updateDETAILS(userId) {
     const usernameElement = document.querySelector('#user_name_' + userId);
     const emailElement = document.querySelector('#user_email_' + userId);
     const passwordElement = document.querySelector('#user_password_' + userId);
+    const emriploteElement = document.querySelector('#emri_plote_'+ userId);
+    const adresaElement=document.querySelector('#adresa'+ userId);
+    const telElement= document.querySelector('#tel'+ userId);
+
     const roleElement = document.querySelector('#user_role_' + userId);
     const verifiedElement = document.querySelector('#user_verified_' + userId);
     const fileInput = document.querySelector('#user_profile_image_' + userId);
 
-    if (!usernameElement || !emailElement || !passwordElement || !roleElement || !verifiedElement || !fileInput) {
+    if (!usernameElement || !emailElement || !passwordElement  || !emriploteElement  || !adresaElement  || !telElement  || !roleElement || !verifiedElement || !fileInput) {
         console.error("One or more elements are missing.");
         alert("An error occurred: One or more elements are missing.");
         return;
@@ -572,13 +788,21 @@ function updateDETAILS(userId) {
     const updatedName = usernameElement.value;
     const updatedEmail = emailElement.value;
     const updatedPassword = passwordElement.value;
+    const updatedEmriPlote= emriploteElement.value;
+    const updatedAdresa= adresaElement.value;
+    const updatedTel=telElement.value;
+
     const updatedRole = roleElement.value;
     const updatedIsVerified = verifiedElement.checked ? 1 : 0;
 
     const formData = new FormData();
-    formData.append('id', userId);
+    formData.append('id', userId);//celesat:id,username etj perdoren ne php per te marre vlerat
     formData.append('username', updatedName);
     formData.append('email', updatedEmail);
+    formData.append('emriplote', updatedEmriPlote);
+    formData.append('adresa', updatedAdresa);
+    formData.append('nrtelefoni', updatedTel);
+    
     formData.append('password', updatedPassword);
     formData.append('role_id', updatedRole);
     formData.append('is_verified', updatedIsVerified);
@@ -588,7 +812,7 @@ function updateDETAILS(userId) {
     }
 
     $.ajax({
-        url: 'admin_update_profile.php',
+        url: 'user_update_profile.php',
         method: 'POST',
         data: formData,
         contentType: false,
@@ -611,9 +835,13 @@ function updateUser(userId) {
     const usernameElement = document.querySelector('#user_name_' + userId);
     const emailElement = document.querySelector('#user_email_' + userId);
     const passwordElement = document.querySelector('#user_password_' + userId);
+    const emriploteElement = document.querySelector('#emri_plote_'+ userId);
+    const adresaElement=document.querySelector('#adresa'+ userId);
+    const telElement= document.querySelector('#tel'+ userId);
+
     const fileInput = document.querySelector('#user_profile_image_' + userId);
 
-    if (!usernameElement || !emailElement || !passwordElement || !fileInput) {
+    if (!usernameElement || !emailElement || !emriploteElement  || !adresaElement  || !telElement || !fileInput) {
         console.error("One or more elements are missing.");
         alert("An error occurred: One or more elements are missing.");
         return;
@@ -621,13 +849,21 @@ function updateUser(userId) {
 
     const updatedName = usernameElement.value;
     const updatedEmail = emailElement.value;
-    const updatedPassword = passwordElement.value;
+    //const updatedPassword = passwordElement.value;
+    const updatedEmriPlote= emriploteElement.value;
+    const updatedAdresa= adresaElement.value;
+    const updatedTel=telElement.value;
+
    
     const formData = new FormData();
     formData.append('id', userId);
     formData.append('username', updatedName);
     formData.append('email', updatedEmail);
-    formData.append('password', updatedPassword);
+   // formData.append('password', updatedPassword);
+    formData.append('emriplote', updatedEmriPlote);
+    formData.append('adresa', updatedAdresa);
+    formData.append('nrtelefoni', updatedTel);
+   
     
     if (fileInput.files.length > 0) {
         formData.append('profile_picture', fileInput.files[0]);
@@ -642,7 +878,7 @@ function updateUser(userId) {
         success: response => {
             console.log(response);
             alert('User profile updated successfully!');
-            get_list();
+            
         },
         error: err => {
             console.error("Error updating profile:", err);
@@ -707,27 +943,32 @@ function capitalize(string) {
 
 
 function deleteUser(userId) {
-if (!confirm("Are you sure you want to delete user with ID: " + userId + "?")) {
-    return;
-}
+    console.log("Deleting user with ID: ", userId); // debugging
 
-    $.ajax({
-        url: 'delete.php',
+    if (!confirm("Are you sure you want to delete user with ID: " + userId + "?")) {
+        return;
+    }
+
+    fetch('delete.php', {
         method: 'POST',
-        data: { id: userId },
-        success: (response) => {
-            if (response.status === 'success') {
-                alert('User deleted successfully.');
-                // Refresh the user list or hide the user details
-                get_list();
-                toggleProfileSections({ user: false, list: true, admin: false });
-            } else {
-                alert('Failed to delete user: ' + response.message);
-            }
+        headers: {
+            // Tells the server we are sending form data
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
-        error: (err) => {
-            console.error("Error deleting user:", err);
-            alert("An error occurred while deleting the user.");
-        }
-    });
+        body: new URLSearchParams({ id: userId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('User deleted successfully.');
+            get_list();
+            toggleProfileSections({ user: false, list: true, admin: false });
+        } else {
+            alert('Failed to delete user: ' + data.message);
+        }
+    })
+    .catch(err => {
+        console.error("Error deleting user:", err);
+        alert("An error occurred while deleting the user.");
+    });
 }
