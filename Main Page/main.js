@@ -5,6 +5,7 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
     const carsPerPage = 3; // Show 3 cars per page
     let totalPages = 0;
 
+
     // Function to fetch car details
     export async function getCarDetails() {
       try {
@@ -13,7 +14,7 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
 
         if (data.success) {
           cars = data.cars;  // Store the cars in the global variable
-          totalPages = Math.ceil(cars.length / carsPerPage); // Calculate total pages
+          // totalPages = Math.ceil(cars.length / carsPerPage); // Calculate total pages
           return cars;  // Return the car data
         } else {
           console.log("Error:", data.message);
@@ -28,6 +29,11 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
     export function setCars(t){
       cars=t;
     }
+
+    export function restorePagination(){
+      currentPage=1;
+    }
+
     export function displayCars(carsToDisplay) {
       const doc = document.querySelector('main');
       let html = '';
@@ -60,10 +66,11 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
       doc.innerHTML = html;
     }
 
-    function updatePagination() {
+    export function updatePagination() {
       const prevButton = document.getElementById("prev-btn");
       const nextButton = document.getElementById("next-btn");
       const pageLinksContainer = document.getElementById("page-links");
+      totalPages = Math.ceil(cars.length / carsPerPage); // Calculate total pages
 
       // Clear previous page links
       pageLinksContainer.innerHTML = '';
@@ -117,6 +124,7 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
       if (currentPage < totalPages) {
         currentPage++;
         paginateCars(cars);
+        console.log("cars:",cars)
       }
       // console.log(filters)
       // console.log(filterCars(cars))

@@ -1,4 +1,4 @@
-import { cars,displayCars,fetchAndDisplayCars,paginateCars,setCars } from "./main.js";
+import { cars,fetchAndDisplayCars,getCarDetails,paginateCars,setCars, updatePagination } from "./main.js";
 
 export let filters = {
   fuelType: [],
@@ -21,7 +21,8 @@ checkBoxes.forEach((check) => {
       }
     } else {
       // Remove the value from the array if it's unchecked
-      filters.fuelType = filters.fuelType.filter((fuel) => fuel !== value);
+      filters.fuelType = filters.fuelType.filter((fuel) => fuel != value);
+      console.log(filters.fuelType)
     }
 
     // console.log('Selected Fuel Types:', filters.fuelType);
@@ -47,13 +48,18 @@ var applyBtn = document.getElementById("applyBtn");
 var removeBtn = document.getElementById("removeBtn");
 
 applyBtn.onclick = function() {
-  // console.log({filters})
-  modal.style.display = "none";
+  console.log({filters})
   // console.log(cars)
   // console.log(filterCars(cars,filters));
-  setCars(filterCars(cars,filters));
+  const temp=filterCars(cars,filters);
+  setCars(temp);
+  console.log(cars)
+  modal.style.display = "none";
   paginateCars(cars)
+  // updatePagination(cars)
+  // updatePagination(temp)
 }
+
 removeBtn.onclick=()=>{
   removeFilters();
   // console.log(filters);
@@ -77,12 +83,13 @@ function removeFilters() {
 }
 
 function filterCars(cars, filters) {
+  getCarDetails();
   return cars.filter(car => {
     // Match fuel type (case-insensitive)
-    const matchesFuelType =
-      !filters.fuelType ||
-      filters.fuelType.length === 0 ||
-      filters.fuelType.some(fuel => fuel.toLowerCase() === car.fuel.toLowerCase());
+    const matchesFuelType = 
+  !filters.fuelType || 
+  filters.fuelType.length === 0 || 
+  filters.fuelType.some(fuel => fuel.trim().toLowerCase() == car.fuel.trim().toLowerCase());
 
     // Match price
     const matchesPrice =
