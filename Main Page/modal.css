@@ -6,7 +6,7 @@
   cursor: pointer;
   font-size: 16px;
   border-radius: 5px;
-  margin: 20px;
+  margin-bottom: 1.1rem;
 }
 
 #filterBtn:hover {
@@ -87,71 +87,70 @@
 }
 
 
-.radio-container {
+.checkbox-container {
   display: flex;
-  /* flex-direction: ; */
-  align-self:start;
-  /* background-color: red; */
+  align-self: start;
   gap: 20px;
   max-width: 300px;
   margin: 0 auto;
 }
 
-/* Hide default radio buttons */
-.custom-radio input[type="radio"] {
+/* Hide default checkboxes */
+.custom-checkbox input[type="checkbox"] {
   display: none;
 }
 
 /* Style for the labels */
-.custom-radio label {
+.custom-checkbox label {
   position: relative;
   display: flex;
   align-items: center;
-  font-size: 16px;
+  /* font-size: 1.rem; */
   cursor: pointer;
-  padding-left: 35px; /* Space for the custom radio button */
+  padding-left: 35px; /* Space for the custom checkbox */
 }
 
-/* Custom radio button style */
-.custom-radio label::before {
+/* Custom checkbox style */
+.custom-checkbox label::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  top: 0;
+  /* transform: translateY(-50%); */
+  width: 19px;
+  height: 19px;
+  border-radius: 4px; /* Slightly rounded corners for checkboxes */
   border: 2px solid #4CAF50; /* Green border */
   background-color: white;
-  transition: background-color 0.3s, border 0.3s;
+  transition: all 0.3s, border 0.3s;
 }
 
-/* Checked radio button style */
-.custom-radio input[type="radio"]:checked + label::before {
+/* Checked checkbox style */
+.custom-checkbox input[type="checkbox"]:checked + label::before {
   background-color: #4CAF50; /* Green background when checked */
   border-color: #4CAF50;
 }
 
-/* Inner dot when radio button is checked */
-.custom-radio input[type="radio"]:checked + label::after {
+/* Checkmark when checkbox is checked */
+.custom-checkbox input[type="checkbox"]:checked + label::after {
   content: '';
   position: absolute;
   left: 6px;
-  top: 6px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: white;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
-/* Hover effect for the radio button */
-.custom-radio label:hover::before {
+/* Hover effect for the checkbox */
+.custom-checkbox label:hover::before {
   border-color: #45a049; /* Darker green on hover */
 }
 
-/* Focus effect for the radio button */
-.custom-radio input[type="radio"]:focus + label::before {
+/* Focus effect for the checkbox */
+.custom-checkbox input[type="checkbox"]:focus + label::before {
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); /* Green focus outline */
 }
 

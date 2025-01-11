@@ -42,31 +42,32 @@
             <!-- Filter Content (for demonstration) -->
             <p>Here you can apply your filters.</p>
             <p>Select Fuel Type</p>
-            <div class="radio-container">
-      
-              <div class="custom-radio">
-                  <input type="radio" id="benzine" name="fuel" value="benzine">
-                  <label for="benzine">Benzine</label>
+            <div class="checkbox-container">
+              <div class="custom-checkbox">
+                <input name="fuel" type="checkbox" id="benzine" value="benzine">
+                <label for="benzine">Benzine</label>
               </div>
-      
-              <div class="custom-radio">
-                  <input type="radio" id="nafte" name="fuel" value="nafte">
-                  <label for="nafte">Nafte</label>
+            
+              <div class="custom-checkbox">
+                <input name="fuel" type="checkbox" id="nafte" value="nafte">
+                <label for="nafte">Nafte</label>
               </div>
-      
-              <div class="custom-radio">
-                  <input type="radio" id="electric" name="fuel" value="electric">
-                  <label for="electric">Electric</label>
+            
+              <div class="custom-checkbox">
+                <input name="fuel" type="checkbox" id="electric" value="electric">
+                <label for="electric">Electric</label>
               </div>
             </div>
+            
             <p>Price</p>
             <div class="price-container">
               <input type="number" id="numberInput">
-          </div>
+            </div>
 
           <div class="select-container">
             <p>Choose Mode:</p>
             <select id="mode" name="mode">
+              <option default value="automatic">All</option>
               <option value="automatic">Automatic</option>
               <option value="manual">Manual</option>
             </select>
@@ -92,7 +93,9 @@
     </footer>
   </body>
 
-  <script src="./main.js"></script>
-  <script src="./modal.js"></script>
+  <script type="module" src="./main.js"></script>
+  <script  src="./modal.js"></script>
+  <script type="module" src="./filters.js"></script>
+
 
 </html>

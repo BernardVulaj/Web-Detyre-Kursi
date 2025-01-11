@@ -25,7 +25,7 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
       }
     }
 
-    function displayCars(carsToDisplay) {
+    export function displayCars(carsToDisplay) {
       const doc = document.querySelector('main');
       let html = '';
       carsToDisplay.forEach(car => {
