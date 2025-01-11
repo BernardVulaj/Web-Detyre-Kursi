@@ -124,8 +124,6 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
 
     });
 
-    
-
     // Call the function to fetch and display car details
     export async function fetchAndDisplayCars() {
       await getCarDetails();  // Fetch car details from the API
@@ -133,3 +131,28 @@ const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path
     }
 
     fetchAndDisplayCars();  // Initial call to fetch and display cars
+
+    document.querySelector('.search-icon').addEventListener('click',()=>{
+      const searchText=document.getElementById('search-input').value;
+      // console.log(searchText);
+      const keys=Object.keys(cars[0]).filter(filter=>filter!='id'&&filter!='image_path');
+      const filteredData=cars.filter((car)=>
+        car['name'].toLowerCase().includes(searchText.toLowerCase())
+      )
+      // console.log(filteredData)
+      displayCars(filteredData)
+    })
+    document.getElementById('search-input').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        const searchText = event.target.value;
+        const keys = Object.keys(cars[0]).filter(filter => filter !== 'id' && filter !== 'image_path');
+        const filteredData = cars.filter((car) =>
+          car['name'].toLowerCase().includes(searchText.toLowerCase())
+        );
+        displayCars(filteredData);
+      }
+    });
+    
+    document.querySelector('.search-field').addEventListener('input',(event)=>{
+      if(event.target.value=='') fetchAndDisplayCars();
+    })
