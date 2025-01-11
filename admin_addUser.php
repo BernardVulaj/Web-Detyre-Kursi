@@ -11,12 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
     $role_id = htmlspecialchars($_POST['role_id']);
     $is_verified = htmlspecialchars($_POST['is_verified']);
+    $fullname = htmlspecialchars($_POST['fullname']);
+    $address = htmlspecialchars($_POST['address']);
+    $telephone = htmlspecialchars($_POST['telephone']);
     $profile_image = '';
 
     // Insert user into database to get the user ID
-    $sql = "INSERT INTO users (username, email, password, role_id, is_verified) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO users (username, full_name, address, phone_number, email, password, role_id, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssii", $username, $email, $password, $role_id, $is_verified);
+    $stmt->bind_param("ssssssii", $username, $fullname, $address, $telephone, $email, $password, $role_id, $is_verified);
 
     if ($stmt->execute()) {
         $userId = $stmt->insert_id; // Get the inserted user ID
@@ -41,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $dest_path = $uploadFileDir . $newFileName;
 
                 if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                    $profile_image = $dest_path;
+                    $profile_image = $newFileName; // Only the file name
 
                     // Update user with profile image path
                     $sql = "UPDATE users SET profile_image = ? WHERE id = ?";

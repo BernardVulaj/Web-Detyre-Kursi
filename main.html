@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="./css/main.css" rel="stylesheet">
+    <link href="./css/modal.css" rel="stylesheet">
+  </head>
+  <body>
+   
+    <nav>
+      <div class="nav-links">
+        <a href="../Home Page/home.html">Home</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+      </div>
+      
+      <!-- Filter Button -->
+      
+      <!-- Search Section -->
+      <div class="search-form">
+        <input type="text" placeholder="Search..." name="search" class="search-field" id="search-input">
+        <button type="submit" class="search-icon">
+          <i class="bi bi-search"></i> <!-- Bootstrap search icon -->
+        </button>
+      </div>
+    </nav>
+
+
+    <button id="filterBtn">Filter</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal Content -->
+        <div class="modal-content">
+            <!-- Close Button -->
+            <span class="close" id="closeBtn">&times;</span>
+            <h2>Filter Options</h2>
+            <!-- Filter Content (for demonstration) -->
+            <p>Select Fuel Type</p>
+            <div class="checkbox-container">
+              <div class="custom-checkbox">
+                <input name="fuel" type="checkbox" id="benzine" value="benzine">
+                <label for="benzine">Benzine</label>
+              </div>
+            
+              <div class="custom-checkbox">
+                <input name="fuel" type="checkbox" id="nafte" value="nafte">
+                <label for="nafte">Nafte</label>
+              </div>
+            
+              <div class="custom-checkbox">
+                <input name="fuel" type="checkbox" id="electric" value="elektrike">
+                <label for="electric">Elektrike</label>
+              </div>
+            </div>
+            
+            <p>Price</p>
+            <div class="price-container">
+              <input type="number" id="numberInput">
+            </div>
+
+          <div class="select-container">
+            <p>Choose Mode:</p>
+            <select id="mode" name="mode">
+              <option default value="automatic">All</option>
+              <option value="automatic">Automatic</option>
+              <option value="manual">Manual</option>
+            </select>
+          </div>
+            <!-- Apply Button inside Modal -->
+             <div class="modalBtn-container">
+               <button class="modalBtn" id="applyBtn">Apply</button>
+               <button class="modalBtn" id="removeBtn">Remove</button>
+             </div>
+
+        </div>
+    </div>
+    
+
+    <div id="carDetailsModal" class="modal">
+      <div class="carDetails">
+        <div id="imageContainer">
+
+          <button id="leftArrow"><</button>
+          <img id="carImage" alt="car" >
+          <button id="rightArrow">></button>
+
+        </div>
+        <div id="detailsContainer">
+          <h1 id="carName"></h1>
+          <div>
+              <label class="staticLabel">Viti: </label>
+              <label id="carYear" class="detailLabel"></label>
+          </div>
+          <div>
+              <label class="staticLabel">Transmisioni: </label>
+              <label id="carTransmission" class="detailLabel"></label>
+          </div>
+          <div>
+              <label class="staticLabel">Motori: </label>
+              <label id="carEngine" class="detailLabel"></label>
+          </div>
+          <div>
+              <label class="staticLabel">Kapaciteti i ndenjesve: </label>
+              <label id="carSeatingCapacity" class="detailLabel"></label>
+          </div>
+          <div>
+              <label class="staticLabel">Ngjyra: </label>
+              <label id="carColor" class="detailLabel"></label>
+          </div>
+          <div>
+              <label class="staticLabel">Bluetooth: </label>
+              <label id="carBluetooth" class="detailLabel"></label>
+          </div>
+          <div>
+              <label class="staticLabel">GPS: </label>
+              <label id="carGPS" class="detailLabel"></label>
+          </div>
+          <div>
+              <label class="staticLabel">Lloji: </label>
+              <label id="carType" class="detailLabel"></label>
+          </div>
+
+          <div>
+              <label class="staticLabel">Cmimi ditore: </label>
+              <label id="carPrice" class="detailLabel"></label>
+              <label class="detailLabel"> Euro</label>
+              
+          </div>
+
+          <div>
+              <label class="staticLabel">Data e marrjes: </label>
+              <input type="date" id="startDate" required>
+          </div>
+          <div>
+              <label class="staticLabel">Data e dorezimit:</label>
+              <input type="date" id="endDate" required>
+          </div>
+          <div>
+              <label class="staticLabel">Dite Totale Rentimi: </label>
+              <span id="diteTotale"></span>
+
+          </div>
+          <span id="diteTotale"></span>
+          
+          
+          
+          <button id="rezervoButton">
+              REZERVO
+          </button>
+          <button id="dilButton">
+              DIL
+          </button>
+        </div>
+
+      </div>
+    </div>
+    <main>
+    </main>
+
+    
+    <footer>
+      <div class="pagination">
+        <button id="prev-btn" class="disabled" disabled>Previous</button>
+        <!-- Page links will be dynamically generated here -->
+        <div id="page-links"></div>
+        <button id="next-btn">Next</button>
+      </div>
+    </footer>
+
+
+    
+
+
+  
+  </body>
+
+  <script type="module" src="./main.js"></script>
+  <script src="./carDetails.js"></script>
+  <script type="module" src="./modal.js"></script>
+  <script type="module" src="./filters.js"></script>
+  <script src="sessionTimeout.js"></script>
+
+  
+
+  
+
+
+
+  
+</html>

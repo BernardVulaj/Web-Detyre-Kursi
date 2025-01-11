@@ -33,9 +33,12 @@ $sql = "SELECT id,
                email, 
                profile_image, 
                role_id, 
-               is_verified, 
+               is_verified,
                created_at, 
-               updated_at 
+               updated_at,
+               full_name,
+               address,
+               phone_number 
         FROM users 
         WHERE id = ?";
 $stmt = $conn->prepare($sql);

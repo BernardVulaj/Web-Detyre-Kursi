@@ -6,95 +6,237 @@
     <title>Client List</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="css/profile.css">
-    <script src="profile.js"></script>
 </head>
 <body>
-    <!-- <div id="simulation">
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        <label for="simulate" aria-label="UserID for simulation">UserID for Simulation</label>
-                    </td>
-                    <td>
-                        <input type="text" id="simulate" name="simulate" value="1" style="width: 50px; text-align: center;" />
-                    </td>
-                    <td>
-                        <img 
-                            src="images/ask_button.jpeg" 
-                            alt="Get User Details" 
-                            style="width: 40px; height: 30px; cursor: pointer;" 
-                            onclick="get_user_main();" 
-                        />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div> -->
     <div id="header">
         <div id="navigationBar">
-            <a href="index.php">
-                Home
-            </a>
-            <a>
-                Makinat
-            </a>
-            <a>
-                Rreth Nesh
-            </a>
-            <a>
-                Kontakto
-            </a>
-
+            <a href="index.php">Home</a>
+            <a>Makinat</a>
+            <a>Rreth Nesh</a>
+            <a>Kontakto</a>
         </div>
 
+        <div id="menue_admin">
+            <h1 style="text-align: center;">Admin Menue</h1>
+            <table>
+                <tr><td><button onclick="get_list()">User Administration</button></td></tr>
+                <tr><td><button onclick="get_car_list()">Car Administration</button></td></tr>
+                <td colspan="1">
+                    <button onclick="signOut()">Sign Out</button>  
+         </td>
+            </table>
+        </div>
 
-    <div id="profile_list">
-        <h1 style="text-align: center;">Client List</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody id="body-profile-list">
-                <!-- Client data will be dynamically inserted here -->
-            </tbody>
-        </table>
-    </div>
+        <div id="profile_list">
+            <h1 style="text-align: center;">Client List</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody id="body-profile-list">
+                    <!-- Client data will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
 
-    <div id="profile_admin">
-        <h1 style="text-align: center;">Client Details</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody id="body-profile-details">
-                <!-- Client details will be dynamically inserted here -->
-            </tbody>
+        <div id="profile_admin">
+            <h1 style="text-align: center;">Client Details</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody id="body-profile-details">
+                    <!-- Client details will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
 
-        </table>
-    </div>
+        <div id="profile_user">
+            <h1 style="text-align: center;">Your Profile Details</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody id="body-profile-details-user">
+                    <!-- User profile details will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
 
-    <div id="profile_user">
-        <h1 style="text-align: center;">Your Profile Details</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody id="body-profile-details-user">
-                <!-- User profile details will be dynamically inserted here -->
-            </tbody>
-        </table>
+        <div id="car_list_form">
+            <h1 style="text-align: center;">Car list</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price per day</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody id="body-profile-details-cars-list">
+                    <!-- cars list will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="car_details">
+            <h1 style="text-align: center;">Add new car</h1>
+            <table>
+                <tbody>
+                    <tr>
+                        <td><label for="name_new">Emri</label></td>
+                        <td><input type="text" id="name_new" placeholder="Emri"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="price_per_day_new">Cmimi ne dite</label></td>
+                        <td><input type="number" id="price_per_day_new" placeholder="Cmimi ne dite"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="fuel_new">Karburanti</label></td>
+                        <td><input type="text" id="fuel_new" placeholder="Karburanti"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="seating_capacity_new">Kapaciteti</label></td>
+                        <td><input type="number" id="seating_capacity_new" placeholder="Kapaciteti"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="engine_new">Madhesia motorrit</label></td>
+                        <td><input type="text" id="engine_new" placeholder="Madhesia motorrit"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="transmission_new">Kambio</label></td>
+                        <td><input type="text" id="transmission_new" placeholder="Kambio"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="year_new">Viti i prodhimit</label></td>
+                        <td><input type="number" id="year_new" placeholder="Viti i prodhimit"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="bluetooth_new">Bluetooth</label></td>
+                        <td><input type="checkbox" id="bluetooth_new"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="gps_new">GPS</label></td>
+                        <td><input type="checkbox" id="gps_new"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="color_new">Ngjyra</label></td>
+                        <td><input type="text" id="color_new" placeholder="Ngjyra"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="type_new">Lloji</label></td>
+                        <td><input type="text" id="type_new" placeholder="Lloji"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="profile_pictures_new">Fotot e Makinës</label></td>
+                        <td><input type="file" id="profile_pictures_new" name="profile_pictures[]" accept="image/*" multiple></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <button onclick="submitNewCar()">Submit</button>
+                            <button onclick="cancelAddCar()">Cancel</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="carDetailsModal" class="modal">
+            <div class="carDetails">
+              <div id="imageContainer">
+      
+                <button id="leftArrow"><</button>
+                <img id="carImage" alt="car" >
+                <button id="rightArrow">></button>
+      
+              </div>
+              <div id="detailsContainer">
+                <h2 id="carName"></h2>
+                <div>
+                    <label class="staticLabel">Viti: </label>
+                    <label id="carYear" class="detailLabel"></label>
+                </div>
+                <div>
+                    <label class="staticLabel">Transmisioni: </label>
+                    <label id="carTransmission" class="detailLabel"></label>
+                </div>
+                <div>
+                    <label class="staticLabel">Motori: </label>
+                    <label id="carEngine" class="detailLabel"></label>
+                </div>
+                <div>
+                    <label class="staticLabel">Kapaciteti i ndenjesve: </label>
+                    <label id="carSeatingCapacity" class="detailLabel"></label>
+                </div>
+                <div>
+                    <label class="staticLabel">Ngjyra: </label>
+                    <label id="carColor" class="detailLabel"></label>
+                </div>
+                <div>
+                    <label class="staticLabel">Bluetooth: </label>
+                    <label id="carBluetooth" class="detailLabel"></label>
+                </div>
+                <div>
+                    <label class="staticLabel">GPS: </label>
+                    <label id="carGPS" class="detailLabel"></label>
+                </div>
+                <div>
+                    <label class="staticLabel">Lloji: </label>
+                    <label id="carType" class="detailLabel"></label>
+                </div>
+      
+                <div>
+                    <label class="staticLabel">Cmimi ditore: </label>
+                    <label id="carPrice" class="detailLabel"></label>
+                    <label class="detailLabel"> Euro</label>
+                    
+                </div>
+      
+                <div>
+                    <label class="staticLabel">Data e marrjes: </label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div>
+                    <label class="staticLabel">Data e dorezimit:</label>
+                    <input type="date" id="endDate" required>
+                </div>
+                <div>
+                    <label class="staticLabel">Dite Totale Rentimi: </label>
+                    <span id="diteTotale"></span>
+      
+                </div>
+                <span id="diteTotale"></span>
+                
+                
+                
+                <button id="fshiButton">
+                    FSHI
+                </button>
+                <button id="dilButton">
+                    DIL
+                </button>
+              </div>
+      
+          </div>
+        </div>
+        
 
-    </div>
 </body>
+<script src="carDetails.js"></script>
+<script src="profile.js"></script>
+
+
+<script>
+    
+</script>
+
+
 </html>

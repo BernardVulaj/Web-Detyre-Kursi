@@ -1,0 +1,413 @@
+#filterBtn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-bottom: 1.1rem;
+}
+
+#filterBtn:hover {
+  background-color: #45a049;
+}
+
+/* Modal Background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  /* padding-top: 60px; */
+
+
+
+  
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white;
+  /* margin: 5% auto; */
+  margin: 100px auto;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+  width: 30%;
+  position: relative;
+
+
+
+}
+
+.modal-content p{
+  margin:0;
+}
+/* Close Button (X) */
+.close {
+  color: #aaa;
+  font-size: 30px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modalBtn-container{
+ display: flex;
+ gap:0.9rem;
+ justify-content: center;
+}
+.modalBtn{
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+/* Apply Button */
+#applyBtn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#applyBtn:hover {
+  background-color: #45a049;
+}
+#removeBtn {
+  background-color: rgb(209, 38, 38);
+}
+
+#removeBtn:hover {
+  background-color: rgb(148, 22, 22);
+}
+
+
+.checkbox-container {
+  display: flex;
+  align-self: start;
+  gap: 20px;
+  padding: 0.8rem 0.7rem;
+  max-width: 300px;
+  border-radius: 0.2rem;
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0,0.2); */
+  margin: 0 auto;
+}
+
+/* Hide default checkboxes */
+.custom-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+/* Style for the labels */
+.custom-checkbox label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* font-size: 1.rem; */
+  cursor: pointer;
+  padding-left: 35px; /* Space for the custom checkbox */
+}
+
+/* Custom checkbox style */
+.custom-checkbox label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* transform: translateY(-50%); */
+  width: 19px;
+  height: 19px;
+  border-radius: 4px; /* Slightly rounded corners for checkboxes */
+  border: 2px solid #4CAF50; /* Green border */
+  background-color: white;
+  transition: all 0.3s, border 0.3s;
+}
+
+/* Checked checkbox style */
+.custom-checkbox input[type="checkbox"]:checked + label::before {
+  background-color: #4CAF50; /* Green background when checked */
+  border-color: #4CAF50;
+}
+
+/* Checkmark when checkbox is checked */
+.custom-checkbox input[type="checkbox"]:checked + label::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Hover effect for the checkbox */
+.custom-checkbox label:hover::before {
+  border-color: #45a049; /* Darker green on hover */
+}
+
+/* Focus effect for the checkbox */
+.custom-checkbox input[type="checkbox"]:focus + label::before {
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); /* Green focus outline */
+}
+
+/* Style for the container title */
+.radio-container h2 {
+  text-align: center;
+  font-size: 20px;
+  color: #333;
+}
+
+/*  */
+.price-container {
+  /* position: relative; */
+  align-self: center;
+  border-radius: 0.5rem;
+  /* padding: 0.8rem 0.6rem; */
+  box-shadow: 0 4px 10px rgba(0, 0, 0,0.2);
+
+
+}
+
+/* Style the number input box */
+.price-container input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #4CAF50; /* Green border */
+  border-radius: 5px;
+  outline: none;
+  background-color: white;
+  color: #333;
+  text-align: center;
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+
+/* Focus effect for input */
+.price-container input[type="number"]:focus {
+  border-color: #45a049;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green glow */
+}
+
+/* Hide default spinner (up and down arrows) */
+.price-container input::-webkit-outer-spin-button,
+.price-container input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* Optional: Add custom up and down buttons (using ::after and ::before) */
+.price-container button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Style the up button */
+.price-container button.up {
+  border-radius: 5px 0 0 5px;
+}
+
+/* Style the down button */
+.price-container button.down {
+  border-radius: 0 5px 5px 0;
+}
+
+/* Button hover effects */
+.price-container button:hover {
+  background-color: #45a049;
+}
+
+/*  */
+.select-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0,0.2); */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap:10px;
+}
+.select-container p{
+  align-self: start;
+}
+
+.select-container select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+  width: 200px;
+  background-color: #f9f9f9;
+  transition: all 0.3s;
+}
+#mode{
+  box-shadow: 0 4px 10px rgba(0, 0, 0,0.2);
+}
+
+select:focus {
+  border-color: rgb(29, 138, 29);
+}
+
+option {
+  font-size: 16px;
+}
+
+
+
+
+
+
+/* per car detail page */
+/* modal e kam ba koment sepse perdori t njejten qe esht lart */
+/* .modal {
+  display: none; 
+  position: fixed; 
+  z-index: 100; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0, 0, 0, 0.4); /
+
+  
+} */
+
+
+.carDetails {
+  background-color: #fefefe;
+  /* margin: 100px auto; */
+  margin: 5% auto;
+
+  
+  padding: 20px;
+  border: 1px solid #888;
+  width: fit-content;
+  border-radius: 15px;
+  background-color: white;
+  /* width: 1200px; */
+  padding: 40px;
+  padding-left: 0px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  display: flex;
+  
+}
+#imageContainer{
+  display: flex;
+  align-items: center;
+}
+
+#carImage{
+  width: 700px; 
+  height: 500px; 
+  border-radius: 10px;
+
+}
+#leftArrow,#rightArrow{
+  border: none;
+  background-color: transparent;
+  font-size: xxx-large;
+  width: 40px;
+  height: 40px;
+  padding: 0px;
+  color:navy;
+  opacity: 70%;
+  border-radius: 25px;
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+#leftArrow:hover,#rightArrow:hover{
+  opacity: 100%;
+}
+#leftArrow:active,#rightArrow:active{
+  color: white;
+  opacity: 100%;
+}
+#detailsContainer{
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-left: 10px;
+}
+h1{
+  margin: 0px;
+}
+.staticLabel{
+  font-weight: bold;
+}
+.detailLabel{
+  font-style:italic;
+  color:dimgray;
+  
+}
+
+
+#rezervoButton{
+  padding: 12px;
+  font-size: small;
+  color: white;
+  background-color:navy;
+  opacity: 70%;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  
+}
+#rezervoButton:hover{
+  opacity: 85%;
+}
+#rezervoButton:active{
+  opacity: 100%;
+}
+
+#dilButton{
+  padding: 12px;
+  font-size: small;
+  color:navy;
+  background-color: white;
+  opacity: 70%;
+  cursor: pointer;
+  border: solid 2px navy;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+#dilButton:hover{
+  opacity: 85%;
+}
+#dilButton:active{
+  opacity: 100%;
+}
+

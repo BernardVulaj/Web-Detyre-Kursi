@@ -57,7 +57,7 @@ if($actionCalled == "getCarDetails"){
     echo json_encode(["success" => true, 
                             "name" => $car['name'], 
                             "pricePerDay" => $car['price_per_day'], 
-                            "description" => $car['description'], 
+                            "fuel" => $car['fuel'], 
                             "seatingCapacity" => $car['seating_capacity'], 
                             "engine" => $car['engine'],
                             "transmission" => $car['transmission'], 

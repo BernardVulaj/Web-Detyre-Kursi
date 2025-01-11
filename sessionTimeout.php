@@ -18,7 +18,7 @@ if ((time() - $_SESSION['lastActivity']) > 900) { // 900 sekonda = 15 minuta
     session_unset();     // Fshi të gjitha të dhënat e sesionit
     session_destroy();   // Zhbëj sesionin
 
-    echo json_encode(["success" => true]);  // Dërgo një mesazh për ridrejtim
+    echo json_encode(["active" => true]);  // Dërgo një mesazh për ridrejtim
     exit();
 }
 

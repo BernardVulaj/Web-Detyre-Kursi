@@ -13,7 +13,7 @@
             <div id="imageContainer">
 
                 <button id="leftArrow"><</button>
-                <img id="carImage" alt="car">
+                <img id="carImage" alt="car" >
                 <button id="rightArrow">></button>
 
             </div>
@@ -103,6 +103,7 @@
             
             document.addEventListener('DOMContentLoaded', function() {
                 if(carId){
+                    console.log(carId);
                     // Create an object to hold the user data
                     const data = {
                         carId: carId,
@@ -145,8 +146,9 @@
                             console.log('Image paths:', imagePaths);
                             imagePathLength = imagePaths.length;
                             console.log(imagePathLength);
-                            
-                            document.getElementById("carImage").src = imagePaths[imagePosition];
+                            console.log(imagePaths[imagePosition]);
+                            document.getElementById("carImage").src = "images/cars/"+imagePaths[imagePosition];
+                            ;
 
 
                         } else {
@@ -214,7 +216,7 @@
                     imagePosition--;
                     // console.log(imagePosition);
 
-                    document.getElementById("carImage").src = imagePaths[imagePosition];
+                    document.getElementById("carImage").src = "images/cars/"+imagePaths[imagePosition];
 
                 }
             });
@@ -224,7 +226,7 @@
                     imagePosition++;
                     // console.log(imagePosition);
 
-                    document.getElementById("carImage").src = imagePaths[imagePosition];
+                    document.getElementById("carImage").src = "images/cars/"+imagePaths[imagePosition];
 
                 }
             });

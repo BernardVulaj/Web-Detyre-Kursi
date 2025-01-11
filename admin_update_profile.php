@@ -8,9 +8,12 @@ if ($conn->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = htmlspecialchars($_POST['username']);
     $email = htmlspecialchars($_POST['email']);
+    $emriPlote = htmlspecialchars($_POST['emriplote']);
+    $adresa = htmlspecialchars($_POST['adresa']);
+    $nrTeli = htmlspecialchars($_POST['nrtelefoni']);
     $role_id = htmlspecialchars($_POST['role_id']);
     $is_verified = htmlspecialchars($_POST['is_verified']);
-    $userId = intval($_POST['id']); // Fetch dynamic user ID
+    $userId =$_POST['id']; // Fetch dynamic user ID
 
     $password_hashed = null;
     if (!empty($_POST['password'])) {
@@ -43,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $sql = "UPDATE users SET username = ?, email = ?, role_id = ?, is_verified = ?";
-    $params = [$username, $email, $role_id, $is_verified];
+    $sql = "UPDATE users SET username = ?, email = ?,full_name = ?,  address = ?, phone_number=?, role_id = ?, is_verified = ?";
+    $params = [$username, $email,$emriPlote,$adresa,$nrTeli ,$role_id, $is_verified];
 
     if ($password_hashed) {
         $sql .= ", password = ?";
