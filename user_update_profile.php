@@ -1,42 +1,65 @@
 <?php
+/************************************
+ * 1) CONNECT TO DB
+ ************************************/
 $conn = new mysqli('localhost', 'root', '', 'car_rental');
-
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle form submission
+/************************************
+ * 2) CHECK IF FORM SUBMITTED
+ ************************************/
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize inputs
-    $username = htmlspecialchars(trim($_POST['username']));
-    $email = htmlspecialchars(trim($_POST['email']));
-    $password = $_POST['password']; // Will hash later
-    $profile_image = isset($_FILES['profile_picture']['name']) ? $_FILES['profile_picture']['name'] : null;
-    $userId = intval($_POST['id']);
+    // Capture user inputs
+    $userId    = intval($_POST['id']);
+    $username  = trim($_POST['username']);
+    $email     = trim($_POST['email']);
+    $fullname  = trim($_POST['emriplote']);
+    $address   = trim($_POST['adresa']);
+    $telephone = trim($_POST['nrtelefoni']);
+    
+    $password  = $_POST['password'] ?? ''; // Will be hashed if not empty
+    $fileInfo  = $_FILES['profile_picture'] ?? null;
 
+    /************************************
+     * 3) BASIC VALIDATION
+     ************************************/
+    // Validate email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo "Invalid email format.";
         exit;
     }
 
-    // Hash the password
-    if (!empty($password)) {
-        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-    } else {
-        $hashed_password = null;
+    // (Optional) Validate username not empty
+    if (empty($username)) {
+        echo "Username cannot be empty.";
+        exit;
     }
 
-    $target_file = null;
-    if ($profile_image) {
-        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-        $file_type = mime_content_type($_FILES["profile_picture"]["tmp_name"]);
-        $file_size = $_FILES["profile_picture"]["size"];
-        $max_file_size = 2 * 1024 * 1024; // 2MB
+    /************************************
+     * 4) HASH PASSWORD IF NOT EMPTY
+     ************************************/
+    $hashed_password = !empty($password) 
+        ? password_hash($password, PASSWORD_BCRYPT) 
+        : null;
 
+    /************************************
+     * 5) HANDLE IMAGE UPLOAD
+     ************************************/
+    $target_file = null; 
+    if ($fileInfo && $fileInfo['name']) {
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+        $file_type     = mime_content_type($fileInfo["tmp_name"]);
+        $file_size     = $fileInfo["size"];
+        $max_file_size = 2 * 1024 * 1024; // 2MB
+        $target_dir    = "images/";
+        
+        // Check file type and size
         if (in_array($file_type, $allowed_types) && $file_size <= $max_file_size) {
-            $target_dir = "images/";
-            $target_file = $target_dir . basename($profile_image);
-            if (!move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $target_file)) {
+            $newFileName = basename($fileInfo['name']); // Only the file name
+            $target_file = $target_dir . $newFileName;
+            if (!move_uploaded_file($fileInfo["tmp_name"], $target_file)) {
                 echo "Error uploading profile picture.";
                 exit;
             }
@@ -46,12 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Kontrolloni nëse email-i është unik, përveç për përdoruesin aktual
+    /************************************
+     * 6) CHECK IF EMAIL UNIQUE (excluding current user)
+     ************************************/
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
     $stmt->bind_param("si", $email, $userId);
     $stmt->execute();
     $stmt->store_result();
-
     if ($stmt->num_rows > 0) {
         echo "This email is already in use by another user.";
         $stmt->close();
@@ -59,31 +83,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->close();
 
-    $sql = "UPDATE users SET username = ?, email = ?";
-    $params = [$username, $email];
-    $types = "ss";
+    /************************************
+     * 7) PREPARE SQL FOR UPDATING
+     ************************************/
+    $sql    = "UPDATE users SET username = ?, email = ?, full_name = ?, address = ?, phone_number = ?";
+    $params = [$username, $email, $fullname, $address, $telephone];
+    $types  = "sssss";
 
     if ($hashed_password) {
-        $sql .= ", password = ?";
-        $params[] = $hashed_password;
-        $types .= "s";
+        $sql      .= ", password = ?";
+        $params[]  = $hashed_password;
+        $types    .= "s";
     }
 
     if ($target_file) {
-        $sql .= ", profile_image = ?";
-        $params[] = $target_file;
-        $types .= "s";
+        $sql      .= ", profile_image = ?";
+        $params[]  = $newFileName; // Only the file name
+        $types    .= "s";
     }
 
-    $sql .= " WHERE id = ?";
-    $params[] = $userId; // Replace with dynamic user ID if needed
-    $types .= "i";
+    $sql     .= " WHERE id = ?";
+    $params[] = $userId;
+    $types   .= "i";
 
+    /************************************
+     * 8) EXECUTE UPDATE
+     ************************************/
     $stmt = $conn->prepare($sql);
     $stmt->bind_param($types, ...$params);
 
     if ($stmt->execute()) {
         echo "Profile updated successfully.";
+        // Redirect or refresh page if needed
         header("Location: index.php");
     } else {
         echo "Error updating record: " . $stmt->error;
@@ -92,5 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 }
 
+/************************************
+ * 9) CLOSE CONNECTION
+ ************************************/
 $conn->close();
 ?>
