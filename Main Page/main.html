@@ -23,7 +23,7 @@
       
       <!-- Search Section -->
       <div class="search-form">
-        <input type="text" placeholder="Search..." name="search" class="search-field" id="search-input">
+        <input autocomplete="off" type="text" placeholder="Search..." name="search" class="search-field" id="search-input">
         <button type="submit" class="search-icon">
           <i class="bi bi-search"></i> <!-- Bootstrap search icon -->
         </button>
@@ -66,7 +66,7 @@
           <div class="select-container">
             <p>Choose Mode:</p>
             <select id="mode" name="mode">
-              <option default value="automatic">All</option>
+              <option default value="">All</option>
               <option value="automatic">Automatic</option>
               <option value="manual">Manual</option>
             </select>
