@@ -1,32 +1,20 @@
 const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path to your file location
-import { filters } from "./filters.js";
+
 export let cars = [];
 let filteredCars = []; // To store filtered results
 let currentPage = 1;
 const carsPerPage = 3; // Show 3 cars per page
 let totalPages = 0;
 
-// Function to fetch car details with filters and pagination
-export async function getCarDetails(filters = {}, page = 1) {
+// Function to fetch car details
+export async function getCarDetails() {
   try {
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        ...filters,  // Send filters to the backend
-        page, 
-        carsPerPage 
-      }),
-    });
-
+    const response = await fetch(apiUrl); // Fetch the data from the API
     const data = await response.json();  // Parse the JSON response
 
     if (data.success) {
       cars = data.cars; // Store the cars in the global variable
-      totalPages = data.totalPages; // Store the total pages for pagination
-      return cars; // Return the filtered car data
+      return cars;      // Return the car data
     } else {
       console.log("Error:", data.message);
       return []; // Return an empty array if no success
@@ -61,7 +49,7 @@ export function displayCars(carsToDisplay) {
           <p class="car-name">${car.name}</p>
           <div class="car-details-container">
             <i class="bi bi-lightning-charge-fill">
-              <span class="text">${car.engine}</span>
+              <span class="text">2.${car.engine}</span>
             </i>
             <i class="bi bi-fuel-pump-fill">
               <span class="text">${car.fuel}</span>
@@ -83,6 +71,8 @@ export function updatePagination() {
   const pageLinksContainer = document.getElementById("page-links");
 
   const data = filteredCars.length > 0 ? filteredCars : cars; // Use filtered cars if available
+  totalPages = Math.ceil(data.length / carsPerPage); // Calculate total pages
+
   // Clear previous page links
   pageLinksContainer.innerHTML = '';
 
@@ -112,42 +102,39 @@ export function updatePagination() {
   nextButton.classList.toggle("disabled", currentPage === totalPages);
 }
 
-export async function paginateCars(data) {
-  // const start = (currentPage - 1) * carsPerPage;
-  // const end = currentPage * carsPerPage;
-  // const carsToDisplay = data.slice(start, end); // Slice the passed data
-  // displayCars(carsToDisplay);
-  await getCarDetails(filters,currentPage);
-  console.log(totalPages)
+export function paginateCars(data) {
+  const start = (currentPage - 1) * carsPerPage;
+  const end = currentPage * carsPerPage;
+  const carsToDisplay = data.slice(start, end); // Slice the passed data
+  displayCars(carsToDisplay);
   updatePagination();
-  displayCars(cars);
 }
 
 // Event listeners for pagination buttons
-document.getElementById("prev-btn").addEventListener("click", async () => {
+document.getElementById("prev-btn").addEventListener("click", () => {
   if (currentPage > 1) {
     currentPage--;
-    await paginateCars(filteredCars.length > 0 ? filteredCars : cars); // Use filteredCars if available
+    console.log(filteredCars.length > 0 ? filteredCars : cars)
+    paginateCars(filteredCars.length > 0 ? filteredCars : cars); // Use filteredCars if available
   }
 });
 
-document.getElementById("next-btn").addEventListener("click", async () => {
+document.getElementById("next-btn").addEventListener("click", () => {
   if (currentPage < totalPages) {
     currentPage++;
-    await paginateCars(filteredCars.length > 0 ? filteredCars : cars); // Use filteredCars if available
+    paginateCars(filteredCars.length > 0 ? filteredCars : cars); // Use filteredCars if available
   }
 });
 
 // Call the function to fetch and display car details
-export async function fetchAndDisplayCars(filters = {}) {
-  await getCarDetails(filters, currentPage);  // Fetch car details from the API with optional filters
+export async function fetchAndDisplayCars() {
+  await getCarDetails();  // Fetch car details from the API
   filteredCars = [];      // Clear filtered results
   paginateCars(cars);     // Display the first page of cars
 }
 
 fetchAndDisplayCars();  // Initial call to fetch and display cars
 
-// Search functionality
 document.querySelector('.search-icon').addEventListener('click', () => {
   const searchText = document.getElementById('search-input').value;
   const dataToSearch = filteredCars.length > 0 ? filteredCars : cars; // Use filteredCars if available
@@ -170,6 +157,7 @@ document.getElementById('search-input').addEventListener('keydown', (event) => {
 
 document.querySelector('.search-field').addEventListener('input', (event) => {
   if (event.target.value === '') {
+    console.log(filteredCars)
     paginateCars(filteredCars.length > 0 ? filteredCars : cars);
   }
 });

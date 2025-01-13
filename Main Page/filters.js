@@ -39,10 +39,9 @@ var applyBtn = document.getElementById("applyBtn");
 var removeBtn = document.getElementById("removeBtn");
 
 applyBtn.onclick = function () {
-  const temp = filterCars(cars, filters);
-  setCars(temp);
+  // Send filters to the backend and update the cars data
+  fetchAndDisplayCars(filters); // Fetch cars with the filters
   restorePagination(); // Reset pagination to the first page
-  paginateCars(temp);
   modal.style.display = "none";
 };
 
@@ -56,28 +55,10 @@ function removeFilters() {
     if (check.checked) check.checked = false;
   });
   numberInput.value = '';
-  mode.value = '';
+  modeSelect.value = '';
   
   filters.fuelType = [];
   filters.price = '';
   filters.transmission = '';
-  fetchAndDisplayCars();
-}
-
-function filterCars(cars, filters) {
-  getCarDetails();
-  return cars.filter(car => {
-    const matchesFuelType =
-      !filters.fuelType.length || 
-      filters.fuelType.some(fuel => fuel.trim().toLowerCase() === car.fuel.trim().toLowerCase());
-
-    const matchesPrice =
-      !filters.price || car.price_per_day <= parseFloat(filters.price);
-
-    const matchesTransmission =
-      !filters.transmission ||
-      filters.transmission.toLowerCase() === car.transmission.toLowerCase();
-
-    return matchesFuelType && matchesPrice && matchesTransmission;
-  });
+  fetchAndDisplayCars(); // Fetch all cars if filters are removed
 }
