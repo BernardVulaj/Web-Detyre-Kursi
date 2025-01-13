@@ -1,10 +1,16 @@
-const apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path to your file location
+let apiUrl = 'http://localhost/Web-Detyre-Kursi/main.php'; // Adjust this path to your file location
 import { filters } from "./filters.js";
 export let cars = [];
 let filteredCars = []; // To store filtered results
 let currentPage = 1;
 const carsPerPage = 3; // Show 3 cars per page
 let totalPages = 0;
+let searchText;
+
+
+function setSearchURL(searchText){
+  apiUrl=`http://localhost/Web-Detyre-Kursi/${searchText?'search':'main'}.php`
+}
 
 // Function to fetch car details with filters and pagination
 export async function getCarDetails(filters = {}, page = 1) {
@@ -159,12 +165,15 @@ document.querySelector('.search-icon').addEventListener('click', () => {
 
 document.getElementById('search-input').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
-    const searchText = event.target.value;
+    const searchText = document.getElementById('search-input').value;
     const dataToSearch = filteredCars.length > 0 ? filteredCars : cars; // Use filteredCars if available
     const filteredData = dataToSearch.filter(car =>
       car.name.toLowerCase().includes(searchText.toLowerCase())
     );
     displayCars(filteredData);
+    // restorePagination();
+    // paginateCars(filteredData);
+    console.log(filteredData);
   }
 });
 

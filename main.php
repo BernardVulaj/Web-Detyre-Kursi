@@ -33,6 +33,12 @@ if (!empty($data['transmission'])) {
     $sql .= " AND transmission = '$transmissionFilter'";
 }
 
+// Check if search is provided, and modify the query accordingly
+if (!empty($data['search'])) {
+    $searchTerm = $data['search'];
+    $sql .= " AND name LIKE '%$searchTerm%'";
+}
+
 // Get pagination details
 $page = isset($data['page']) ? $data['page'] : 1;
 $carsPerPage = isset($data['carsPerPage']) ? $data['carsPerPage'] : 3;
@@ -65,7 +71,7 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Start building the SQL query for calculating the total number of cars (with filters)
+// Start building the SQL query for calculating the total number of cars (with filters and search if needed)
 $totalSql = "SELECT COUNT(*) AS total FROM cars WHERE 1=1";
 
 // Apply the same filters to the total count query
@@ -84,6 +90,12 @@ if (!empty($data['transmission'])) {
     $totalSql .= " AND transmission = '$transmissionFilter'";
 }
 
+// Apply the search filter to the total count query if search is provided
+if (!empty($data['search'])) {
+    $searchTerm = $data['search'];
+    $totalSql .= " AND name LIKE '%$searchTerm%'";
+}
+
 // Execute the total count query
 $totalCarsResult = $conn->query($totalSql);
 $totalCars = $totalCarsResult->fetch_assoc()['total'];
@@ -100,4 +112,5 @@ echo json_encode([
 
 // Close the connection
 $conn->close();
+
 ?>
